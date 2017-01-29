@@ -1,0 +1,59 @@
+[EDITOR] {
+    layout: vertical
+    alignment: topleft
+    match_content_size: true
+
+    [CREATE] {
+        @ref: EDITOR_BUTTON
+        caption: Create new...
+    }
+    [LAYER_FLOOR] {
+        @ref: EDITOR_BUTTON
+        caption: Floor
+    }
+    [LAYER_WALL] {
+        @ref: EDITOR_BUTTON
+        caption: Wall
+    }
+    [LAYER_DOOR] {
+        @ref: EDITOR_BUTTON
+        caption: Door
+    }
+    [LAYER_TRIGGER] {
+        @ref: EDITOR_BUTTON
+        caption: Trigger
+    }
+    [LAYER_PREFAB_CONNECTION] {
+        @ref: EDITOR_BUTTON
+        caption: PrefabConnection
+    }
+    [QUIT] {
+        @ref: EDITOR_BUTTON
+        caption: QUIT
+    }
+    
+    [COLOR_H] {
+        type: slider
+        max_value: 360
+        size: 250, 40
+        margin: 5, 5
+    }
+    [COLOR_S] {
+        type: slider
+        max_value: 100
+        size: 250, 40
+        margin: 5, 5
+    }
+    [COLOR_V] {
+        type: slider
+        max_value: 100
+        size: 250, 40
+        margin: 5, 5
+    }
+}
+[@EDITOR_BUTTON] {
+    type: button
+    size: 250, 40
+    alignment: center
+    margin: 5, 5
+}

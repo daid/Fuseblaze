@@ -1,0 +1,36 @@
+{
+    forground.color: #FFFFFF
+    font: gui/theme/basic/sansation.ttf
+    text.size: 30
+
+    [button] {
+        background.image: gui/theme/basic/background.png
+        forground.color.disabled: #808080
+        forground.color.hovered: #808080
+    }
+    [panel] {
+        background.image: gui/theme/basic/background.png
+    }
+    [label] {
+    }
+    [slider] {
+        background.image: gui/theme/basic/slider_background.png
+        forground.image: gui/theme/basic/slider_forground.png
+        forground.color.disabled: #808080
+        forground.color.hovered: #808080
+    }
+    [progressbar] {
+        background.image: gui/theme/basic/progressbar_background.png
+        forground.image: gui/theme/basic/progressbar_fill.png
+        
+        [progressbar_energy] {
+            forground.color: #33a020
+        }
+        [progressbar_shield] {
+            forground.color: #8080ff
+        }
+        [progressbar_hull] {
+            forground.color: #808040
+        }
+    }
+}

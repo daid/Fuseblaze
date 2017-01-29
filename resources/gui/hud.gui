@@ -1,0 +1,59 @@
+[HUD] {
+    stretch: true
+
+    [ENERGY] {
+        type: progressbar
+        alignment: bottom
+        margin: 75
+        size: 1000, 50
+        progress_alignment: left
+        theme_data: progressbar_energy
+        
+        {
+            @ref: INFO_LABEL_H
+            caption: Energy
+        }
+    }
+
+    [SHIELD] {
+        type: progressbar
+        alignment: bottomleft
+        margin: 50, 75
+        size: 50, 600
+        progress_alignment: bottom
+        theme_data: progressbar_shield
+
+        {
+            @ref: INFO_LABEL_V
+            caption: Shield
+        }
+    }
+
+    [HULL] {
+        type: progressbar
+        alignment: bottomleft
+        margin: 120, 150
+        size: 50, 300
+        progress_alignment: bottom
+        theme_data: progressbar_hull
+
+        {
+            @ref: INFO_LABEL_V
+            caption: Hull
+        }
+    }
+}
+
+[@INFO_LABEL_H] {
+    type: label
+    stretch: true
+    text_alignment: left
+    margin: 30, 0
+}
+[@INFO_LABEL_V] {
+    type: label
+    stretch: true
+    text_alignment: bottom
+    vertical: true
+    margin: 0, 30
+}
