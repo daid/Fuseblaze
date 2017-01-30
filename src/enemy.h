@@ -2,6 +2,7 @@
 #define ENEMY_H
 
 #include "wall.h"
+#include "player.h"
 
 class Enemy : public sp::SceneNode
 {

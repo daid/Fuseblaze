@@ -117,10 +117,14 @@ int main(int argc, char** argv)
         scene_layer->addRenderPass(new sp::BasicNodeRenderPass("window", scene, camera));
         shadow_pass = new ShadowRenderPass("window", scene, camera);
         scene_layer->addRenderPass(shadow_pass);
-        //scene_layer->addRenderPass(new sp::CollisionRenderPass("window", scene, camera));
+        scene_layer->addRenderPass(new sp::CollisionRenderPass("window", scene, camera));
     }
     
-    if (1)
+    if (0)
+    {
+        new Editor(gui_layer->getRoot(), "prefab/small_room1.prefab");
+    }
+    else
     {
         shadow_pass->light_sources.add(new Player(0));
         //Player* p = new Player(1);
@@ -156,10 +160,6 @@ int main(int argc, char** argv)
         for(int n=0; n<5; n++)
             (new Crate())->setPosition(sp::Vector2d(0, -2));
         */
-    }
-    else
-    {
-        new Editor(gui_layer->getRoot());
     }
     engine->run();
     

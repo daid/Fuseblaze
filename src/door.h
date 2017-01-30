@@ -13,7 +13,7 @@ public:
         open_position = position + (sp::Quaterniond::fromAngle(getGlobalRotation2D()) * sp::Vector2d(0.0, size.y));
         request_state = 0;
         actual_state = 0;
-        movement_speed = 5.0;
+        movement_speed = 2.0;
         
         render_data.order -= 1; //Render doors below walls.
     }

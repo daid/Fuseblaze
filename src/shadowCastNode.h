@@ -15,9 +15,17 @@ public:
         
         std::vector<sp::Vector2f> points;
         points.emplace_back(-size.x * 0.5f, -size.y * 0.5f);
+        if (size.x > 5.0)
+            points.emplace_back(0, -size.y * 0.5f);
         points.emplace_back( size.x * 0.5f, -size.y * 0.5f);
+        if (size.y > 5.0)
+            points.emplace_back( size.x * 0.5f,  0);
         points.emplace_back( size.x * 0.5f,  size.y * 0.5f);
+        if (size.x > 5.0)
+            points.emplace_back(0, size.y * 0.5f);
         points.emplace_back(-size.x * 0.5f,  size.y * 0.5f);
+        if (size.y > 5.0)
+            points.emplace_back(-size.x * 0.5f,  0);
         
         std::vector<sp::MeshData::Vertex> vertices;
         for(unsigned int n=0; n<points.size(); n++)

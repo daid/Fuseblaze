@@ -8,18 +8,21 @@
 #include "editor/prototype.h"
 
 #include <json11/json11.hpp>
+#include <sp2/io/resourceProvider.h>
 #include <fstream>
 
 void Prefab::load(sp::string filename)
 {
-    std::ifstream file(filename);
-    if (!file.is_open())
-        return;
-    std::stringstream data;
-    data << file.rdbuf();
-    sp::string err;
+    name = filename;
+    parts.clear();
+
+    sp::io::ResourceStreamPtr stream = sp::io::ResourceProvider::get(filename);
+    if (!stream)
+        LOG(Error, "Failed to find prefab", filename);
+    sp::string data = stream->readAll();
     
-    json11::Json json = json11::Json::parse(data.str(), err);
+    std::string err;
+    json11::Json json = json11::Json::parse(data, err);
     
     for(const json11::Json& entry : json.array_items())
     {
@@ -35,6 +38,8 @@ void Prefab::load(sp::string filename)
             part.type = Part::Type::Trigger;
         else if (type_string == "PrefabConnection")
             part.type = Part::Type::PrefabConnection;
+        else if (type_string == "Spawner")
+            part.type = Part::Type::Spawner;
         else
         {
             LOG(Warning, "Unknown part type", type_string);
@@ -52,6 +57,8 @@ void Prefab::load(sp::string filename)
         
         parts.push_back(part);
     }
+
+    updateConvexHull();
 }
 
 void Prefab::save(sp::string filename)
@@ -77,6 +84,9 @@ void Prefab::save(sp::string filename)
         case Prefab::Part::Type::PrefabConnection:
             data["type"] = "PrefabConnection";
             break;
+        case Prefab::Part::Type::Spawner:
+            data["type"] = "Spawner";
+            break;
         }
         data["position_x"] = part.position.x;
         data["position_y"] = part.position.y;
@@ -93,7 +103,7 @@ void Prefab::save(sp::string filename)
     }
     json11::Json json = prefab_data;
     
-    std::ofstream file(filename);
+    std::ofstream file("resources/" + filename);
     file << json.dump();
 }
 
@@ -123,6 +133,8 @@ std::map<sp::string, sp::P<sp::SceneNode>> Prefab::spawn(sp::Vector2d position, 
             break;
         case Part::Type::PrefabConnection:
             break;
+        case Part::Type::Spawner:
+            break;
         }
         if (node && part.id.length() > 0)
             id_map[part.id] = node;
@@ -145,12 +157,12 @@ std::map<sp::string, sp::P<sp::SceneNode>> Prefab::spawn(sp::Vector2d position, 
     return id_map;
 }
 
-std::vector<Prefab::Part> Prefab::getConnections()
+std::vector<Prefab::Part> Prefab::getParts(Part::Type type)
 {
     std::vector<Part> connections;
     for(Part& part : parts)
     {
-        if (part.type == Part::Type::PrefabConnection)
+        if (part.type == type)
             connections.push_back(part);
     }
     return connections;
@@ -185,4 +197,99 @@ void Prefab::updateFromPrototypes()
         
         parts.push_back(part);
     }
+    
+    updateConvexHull();
+}
+
+bool pointCompare(const sp::Vector2d &a, const sp::Vector2d &b)
+{
+    if (a.x == b.x)
+        return a.y < b.y;
+    return a.x < b.x;
+}
+
+std::pair<double, double> Prefab::projectPolygon(sp::Vector2d position, double rotation, sp::Vector2d normal)
+{
+    sp::Quaterniond q = sp::Quaterniond::fromAngle(rotation);
+    
+	double p_min = sp::dot(normal, position + q * convex_hull[0]);
+	double p_max = p_min;
+	for(sp::Vector2d p : convex_hull)
+	{
+		double projection = sp::dot(normal, position + q * p);
+		p_min = std::min(p_min, projection);
+		p_max = std::max(p_max, projection);
+    }
+	return std::pair<double, double>(p_min, p_max);
+}
+
+bool Prefab::collision(sp::Vector2d position, double rotation, Prefab& other, sp::Vector2d other_position, double other_rotation)
+{
+    sp::Quaterniond q = sp::Quaterniond::fromAngle(rotation);
+	for(unsigned int n=0; n<convex_hull.size(); n++)
+	{
+        sp::Vector2d p0 = position + q * convex_hull[(n + convex_hull.size() - 1) % convex_hull.size()];
+        sp::Vector2d p1 = position + q * convex_hull[n];
+        sp::Vector2d normal = sp::normalize(p1 - p0);
+        normal = sp::Vector2d(normal.y, -normal.x);
+		auto a_min_max = projectPolygon(position, rotation, normal);
+		auto b_min_max = other.projectPolygon(other_position, other_rotation, normal);
+		if (a_min_max.first > b_min_max.second - 1.0) //-1.0 to allow for some overlap.
+			return false;
+		if (b_min_max.first > a_min_max.second - 1.0) //-1.0 to allow for some overlap.
+			return false;
+    }
+
+    q = sp::Quaterniond::fromAngle(other_rotation);
+	for(unsigned int n=0; n<other.convex_hull.size(); n++)
+	{
+        sp::Vector2d p0 = other_position + q * other.convex_hull[(n + other.convex_hull.size() - 1) % other.convex_hull.size()];
+        sp::Vector2d p1 = other_position + q * other.convex_hull[n];
+        sp::Vector2d normal = sp::normalize(p1 - p0);
+        normal = sp::Vector2d(normal.y, -normal.x);
+		auto a_min_max = projectPolygon(position, rotation, normal);
+		auto b_min_max = other.projectPolygon(other_position, other_rotation, normal);
+		if (a_min_max.first > b_min_max.second - 1.0) //-1.0 to allow for some overlap.
+			return false;
+		if (b_min_max.first > a_min_max.second - 1.0) //-1.0 to allow for some overlap.
+			return false;
+    }
+    return true;
+}
+
+void Prefab::updateConvexHull()
+{
+    std::vector<sp::Vector2d> points;
+    
+    for(Part& part : parts)
+    {
+        if (part.type == Part::Type::PrefabConnection)
+            continue;
+        sp::Quaterniond q = sp::Quaterniond::fromAngle(part.rotation);
+        points.push_back(part.position + q * sp::Vector2d(part.size.x / 2.0, part.size.y / 2.0));
+        points.push_back(part.position + q * sp::Vector2d(-part.size.x / 2.0, part.size.y / 2.0));
+        points.push_back(part.position + q * sp::Vector2d(part.size.x / 2.0, -part.size.y / 2.0));
+        points.push_back(part.position + q * sp::Vector2d(-part.size.x / 2.0, -part.size.y / 2.0));
+    }
+    
+    std::sort(points.begin(), points.end(), pointCompare);
+    convex_hull.resize(points.size() * 2);
+    
+    int k = 0;
+    // Build lower hull
+	for (int i=0; i<int(points.size()); i++)
+	{
+		while(k >= 2 && sp::cross(convex_hull[k-1] - convex_hull[k-2], points[i] - convex_hull[k-2]) <= 0)
+            k--;
+		convex_hull[k++] = points[i];
+	}
+
+	// Build upper hull
+	for (int i = int(points.size())-2, t = k+1; i >= 0; i--) {
+		while(k >= t && sp::cross(convex_hull[k-1] - convex_hull[k-2], points[i] - convex_hull[k-2]) <= 0)
+            k--;
+		convex_hull[k++] = points[i];
+	}
+	
+	convex_hull.resize(k-1);
 }

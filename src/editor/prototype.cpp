@@ -36,6 +36,10 @@ Prototype::Prototype(Prefab::Part::Type type, sp::Vector2d position, double rota
         render_data.order = -2;
         color = sp::HsvColor(0, 0, 50);
         break;
+    case Prefab::Part::Type::Spawner:
+        render_data.order = -1;
+        color = sp::HsvColor(0, 100, 50);
+        break;
     }
 
     setColor(color);

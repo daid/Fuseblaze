@@ -10,7 +10,7 @@ class EditorHandle;
 class Editor : public sp::gui::Widget
 {
 public:
-    Editor(sp::P<sp::gui::Widget> parent);
+    Editor(sp::P<sp::gui::Widget> parent, sp::string prefab_name);
         
     virtual bool onPointerDown(sp::io::Pointer::Button button, sp::Vector2f position, int id) override;
     

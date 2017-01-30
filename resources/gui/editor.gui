@@ -27,6 +27,10 @@
         @ref: EDITOR_BUTTON
         caption: PrefabConnection
     }
+    [LAYER_SPAWNER] {
+        @ref: EDITOR_BUTTON
+        caption: Spawner
+    }
     [QUIT] {
         @ref: EDITOR_BUTTON
         caption: QUIT

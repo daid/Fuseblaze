@@ -6,7 +6,7 @@
 #include <sp2/graphics/gui/guiLoader.h>
 #include <sp2/engine.h>
 
-Editor::Editor(sp::P<sp::gui::Widget> parent)
+Editor::Editor(sp::P<sp::gui::Widget> parent, sp::string prefab_name)
 : sp::gui::Widget(parent)
 {
     layout.fill_width = true;
@@ -38,9 +38,13 @@ Editor::Editor(sp::P<sp::gui::Widget> parent)
     {
         selection_layer = Prefab::Part::Type::PrefabConnection;
     });
-    editor_ui->getWidgetWithID("QUIT")->setEventCallback([this](sp::Variant v)
+    editor_ui->getWidgetWithID("LAYER_SPAWNER")->setEventCallback([this](sp::Variant v)
     {
-        savePrefab("resources/prefab/small_hallway_t.prefab");
+        selection_layer = Prefab::Part::Type::Spawner;
+    });
+    editor_ui->getWidgetWithID("QUIT")->setEventCallback([this, prefab_name](sp::Variant v)
+    {
+        savePrefab(prefab_name);
         sp::Engine::getInstance()->shutdown();
     });
 
@@ -70,7 +74,7 @@ Editor::Editor(sp::P<sp::gui::Widget> parent)
     });
     
     Prefab prefab;
-    prefab.load("resources/prefab/small_hallway_t.prefab");
+    prefab.load(prefab_name);
     prefab.createPrototypes();
 }
 
