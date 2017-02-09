@@ -5,14 +5,15 @@
 
 MapGenerator::MapGenerator()
 {
-    room_prefabs.resize(4);
-    room_prefabs[0].load("prefab/small_hallway_t.prefab");
-    room_prefabs[1].load("prefab/small_hallway_corner.prefab");
-    room_prefabs[2].load("prefab/small_hallway.prefab");
-    room_prefabs[3].load("prefab/small_room1.prefab");
+    room_prefabs.resize(5);
+    room_prefabs[0].load("prefab/small_hallway_t");
+    room_prefabs[1].load("prefab/small_hallway_corner");
+    room_prefabs[2].load("prefab/small_hallway");
+    room_prefabs[3].load("prefab/small_room1");
+    room_prefabs[4].load("prefab/small_hallway_slow_door");
     connector_prefabs.resize(2);
-    connector_prefabs[0].load("prefab/small_door.prefab");
-    connector_prefabs[1].load("prefab/small_opening.prefab");
+    connector_prefabs[0].load("prefab/small_door");
+    connector_prefabs[1].load("prefab/small_opening");
 }
 
 void MapGenerator::generate()
@@ -20,10 +21,13 @@ void MapGenerator::generate()
     sp::Vector2d spawn_position(0, 0);
     double spawn_rotation = 45;
 
-    expandMap(0, spawn_position, spawn_rotation, room_prefabs[0], -1);
+    open_ends = 0;
+    expandMap(0, spawn_position, spawn_rotation, room_prefabs[3], -1);
     
     for(auto& pp : placed_prefabs)
     {
+        if (&pp == &placed_prefabs[0])
+            continue;
         for(auto& part : pp.prefab.getParts(Prefab::Part::Type::Spawner))
         {
             sp::Vector2d position = pp.position + sp::Quaterniond::fromAngle(pp.rotation) * part.position;
@@ -37,13 +41,14 @@ void MapGenerator::generate()
 
 bool MapGenerator::expandMap(int depth, sp::Vector2d spawn_position, double spawn_rotation, Prefab& prefab, int entrance_index)
 {
-    if (depth > 5)
+    if (placed_prefabs.size() > 25)
+        return false;
+    if (open_ends > 1 && sp::random(0, 100) < 20)
         return false;
     for(auto& pp : placed_prefabs)
     {
         if (prefab.collision(spawn_position, spawn_rotation, pp.prefab, pp.position, pp.rotation))
         {
-            LOG(Debug, spawn_position, spawn_rotation, prefab.name);
             return false;
         }
     }
@@ -53,10 +58,14 @@ bool MapGenerator::expandMap(int depth, sp::Vector2d spawn_position, double spaw
     sp::Quaterniond q = sp::Quaterniond::fromAngle(spawn_rotation);
     prefab.spawn(spawn_position, spawn_rotation);
     auto connections = prefab.getParts(Prefab::Part::Type::PrefabConnection);
+    open_ends += connections.size();
+    if (entrance_index >= 0)
+        open_ends--;
     for(int n=0; n<int(connections.size()); n++)
     {
         if (n == entrance_index)
             continue;
+        open_ends--;
         auto& part = connections[n];
 
         sp::Vector2d position = spawn_position + q * part.position;
@@ -68,7 +77,10 @@ bool MapGenerator::expandMap(int depth, sp::Vector2d spawn_position, double spaw
 
         if (expandMap(depth + 1, getPositionForPrefab(position, rotation, prefab, parts[index]), rotation + 180 - parts[index].rotation, prefab2, index))
         {
-            connector_prefabs[sp::irandom(0, connector_prefabs.size() - 1)].spawn(position, rotation);
+            if (depth == 0)
+                connector_prefabs[0].spawn(position, rotation);
+            else
+                connector_prefabs[sp::irandom(0, connector_prefabs.size() - 1)].spawn(position, rotation);
         }
         else
         {

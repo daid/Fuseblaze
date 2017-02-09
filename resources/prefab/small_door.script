@@ -1,0 +1,8 @@
+DoorTrigger.onTriggerEnter(function()
+    Door1.open()
+    Door2.open()
+end)
+DoorTrigger.onTriggerExit(function()
+    Door1.close()
+    Door2.close()
+end)

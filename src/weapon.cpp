@@ -2,8 +2,10 @@
 #include "player.h"
 #include "enemy.h"
 #include "effect.h"
+#include "blood.h"
 #include <sp2/graphics/spriteManager.h>
 #include <sp2/scene/scene.h>
+#include <sp2/random.h>
 
 
 Weapon::Weapon(sp::P<Player> player)
@@ -20,47 +22,56 @@ Weapon::Weapon(sp::P<Player> player)
     
     cooldown = 0.0;
     cooldown_delay = 0.1;
+    reload_delay = 1.0;
+    
+    auto_aim = true;
+
+    max_ammo = 9;
+    ammo = max_ammo;
 }
 
 void Weapon::onUpdate(float delta)
 {
-    double target_distance = 0.0;
-    double target_angle = 0.0;
-    double angle = getParent()->getGlobalRotation2D();
-    sp::P<Enemy> target;
-    getScene()->queryCollision(getGlobalPosition2D(), 20, [this, angle, &target, &target_distance, &target_angle](sp::P<sp::SceneNode> object)
+    if (auto_aim)
     {
-        sp::P<Enemy> enemy = object;
-        if (enemy)
+        double target_distance = 0.0;
+        double target_angle = 0.0;
+        double angle = getParent()->getGlobalRotation2D();
+        sp::P<Enemy> target;
+        getScene()->queryCollision(getGlobalPosition2D(), 20, [this, angle, &target, &target_distance, &target_angle](sp::P<sp::SceneNode> object)
         {
-            double distance = sp::length(getGlobalPosition2D() - object->getGlobalPosition2D());
-            if (!target || distance < target_distance)
+            sp::P<Enemy> enemy = object;
+            if (enemy)
             {
-                double enemy_angle = sp::toRotationAngle(enemy->getGlobalPosition2D() - getGlobalPosition2D()) - angle;
-                if (std::abs(sp::angleDifference(enemy_angle, 0.0)) < 55)
+                double distance = sp::length(getGlobalPosition2D() - object->getGlobalPosition2D());
+                if (!target || distance < target_distance)
                 {
-                    bool visible = true;
-                    ::scene->queryCollisionAny(getGlobalPosition2D(), enemy->getGlobalPosition2D(), [&visible](sp::P<sp::SceneNode> object, sp::Vector2d hit_location, sp::Vector2d hit_normal)
+                    double enemy_angle = sp::toRotationAngle(enemy->getGlobalPosition2D() - getGlobalPosition2D()) - angle;
+                    if (std::abs(sp::angleDifference(enemy_angle, 0.0)) < 55)
                     {
-                        if (sp::P<Wall>(object))
+                        bool visible = true;
+                        ::scene->queryCollisionAny(getGlobalPosition2D(), enemy->getGlobalPosition2D(), [&visible](sp::P<sp::SceneNode> object, sp::Vector2d hit_location, sp::Vector2d hit_normal)
                         {
-                            visible = false;
-                            return false;
+                            if (sp::P<Wall>(object))
+                            {
+                                visible = false;
+                                return false;
+                            }
+                            return true;
+                        });
+                        if (visible)
+                        {
+                            target = enemy;
+                            target_distance = distance;
+                            target_angle = enemy_angle;
                         }
-                        return true;
-                    });
-                    if (visible)
-                    {
-                        target = enemy;
-                        target_distance = distance;
-                        target_angle = enemy_angle;
                     }
                 }
             }
-        }
-        return true;
-    });
-    setRotation(target_angle);
+            return true;
+        });
+        setRotation(target_angle);
+    }
     
     if (cooldown > 0.0)
     {
@@ -68,6 +79,8 @@ void Weapon::onUpdate(float delta)
         
         if (cooldown <= 0.0)
         {
+            if (ammo == 0)
+                ammo = max_ammo;
             aiming_node->render_data.color = sp::Color::Red;
         }
     }
@@ -81,24 +94,45 @@ void Weapon::fire()
         aiming_node->render_data.color = sp::HsvColor(0, 0, 50);
         
         launchProjectile();
+        ammo--;
+        if (ammo == 0)
+            cooldown = reload_delay;
+    }
+}
+
+void Weapon::reload()
+{
+    if (cooldown <= 0.0 && ammo < max_ammo)
+    {
+        aiming_node->render_data.color = sp::HsvColor(0, 0, 50);
+
+        ammo = 0;
+        cooldown = reload_delay;
     }
 }
 
 void Weapon::launchProjectile()
 {
     sp::Vector2d position = getGlobalPosition2D();
-    ::scene->queryCollisionAll(position, position + sp::Quaterniond::fromAngle(getGlobalRotation2D()) * sp::Vector2d(20.0, 0.0), [](sp::P<sp::SceneNode> object, sp::Vector2d hit_location, sp::Vector2d hit_normal)
+    ::scene->queryCollisionAll(position, position + sp::Quaterniond::fromAngle(getGlobalRotation2D()) * sp::Vector2d(20.0, 0.0), [this](sp::P<sp::SceneNode> object, sp::Vector2d hit_location, sp::Vector2d hit_normal)
     {
         if (sp::P<Wall>(object))
         {
             new Effect(hit_location);
             return false;
         }
-        if (sp::P<Enemy>(object))
+        sp::P<Enemy> enemy = object;
+        if (enemy)
         {
             new Effect(hit_location);
-            object->setLinearVelocity(hit_normal * -10.0);
-            //delete *object;
+            enemy->setLinearVelocity(hit_normal * -10.0);
+            enemy->takeDamage(1);
+            
+            sp::Vector2d offset = sp::Quaterniond::fromAngle(getGlobalRotation2D() + sp::random(-5, 5)) * sp::Vector2d(0.5, 0.0);
+            for(int n=0; n<5; n++)
+            {
+                new BloodDecal(hit_location + offset * double(n) + sp::Vector2d(sp::random(-0.5, 0.5), sp::random(-0.5, 0.5)));
+            }
             return false;
         }
         return true;

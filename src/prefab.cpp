@@ -9,6 +9,7 @@
 
 #include <json11/json11.hpp>
 #include <sp2/io/resourceProvider.h>
+#include <sp2/script/environment.h>
 #include <fstream>
 
 void Prefab::load(sp::string filename)
@@ -16,7 +17,7 @@ void Prefab::load(sp::string filename)
     name = filename;
     parts.clear();
 
-    sp::io::ResourceStreamPtr stream = sp::io::ResourceProvider::get(filename);
+    sp::io::ResourceStreamPtr stream = sp::io::ResourceProvider::get(filename + ".prefab");
     if (!stream)
         LOG(Error, "Failed to find prefab", filename);
     sp::string data = stream->readAll();
@@ -54,7 +55,7 @@ void Prefab::load(sp::string filename)
         part.color.saturation = entry["color_s"].number_value();
         part.color.value = entry["color_v"].number_value();
         part.id = entry["id"].string_value();
-        
+
         parts.push_back(part);
     }
 
@@ -97,13 +98,13 @@ void Prefab::save(sp::string filename)
         data["color_s"] = part.color.saturation;
         data["color_v"] = part.color.value;
         if (part.id.length() > 0)
-            data["id"] = part.id;
-        
+            data["id"] = part.id.c_str();
+
         prefab_data.push_back(data);
     }
     json11::Json json = prefab_data;
     
-    std::ofstream file("resources/" + filename);
+    std::ofstream file("resources/" + filename + ".prefab");
     file << json.dump();
 }
 
@@ -139,20 +140,18 @@ std::map<sp::string, sp::P<sp::SceneNode>> Prefab::spawn(sp::Vector2d position, 
         if (node && part.id.length() > 0)
             id_map[part.id] = node;
     }
-    if (id_map["DoorTrigger"])
+    
+    sp::io::ResourceStreamPtr script_resource = sp::io::ResourceProvider::get(name + ".script");
+    if (script_resource)
     {
-        sp::P<Door> door1 = id_map["Door1"];
-        sp::P<Door> door2 = id_map["Door2"];
-        (sp::P<Trigger>(id_map["DoorTrigger"]))->onTriggerEnter = [door1, door2]()
-        {
-            door1->open();
-            door2->open();
-        };
-        (sp::P<Trigger>(id_map["DoorTrigger"]))->onTriggerExit = [door1, door2]()
-        {
-            door1->close();
-            door2->close();
-        };
+        //Create script object
+        sp::P<sp::script::Environment> env = new sp::script::Environment();
+        //Register ID map
+        for(auto it : id_map)
+            env->setGlobal(it.first, it.second);
+        //Run script.
+        env->load(script_resource);
+        delete *env;
     }
     return id_map;
 }
@@ -174,6 +173,7 @@ void Prefab::createPrototypes()
     {
         Prototype* p = new Prototype(part.type, part.position, part.rotation, part.size);
         p->setColor(part.color);
+        p->id = part.id;
     }
 }
 

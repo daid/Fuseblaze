@@ -28,6 +28,7 @@ private:
         }
     };
     std::vector<PlacedPrefabs> placed_prefabs;
+    int open_ends;
 
     bool expandMap(int depth, sp::Vector2d position, double rotation, Prefab& prefab, int entrance_index);
 };

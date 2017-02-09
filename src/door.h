@@ -26,13 +26,19 @@ public:
             {
                 actual_state += movement_speed * delta;
                 if (actual_state >= request_state)
+                {
                     actual_state = request_state;
+                    onOpened.call();
+                }
             }
             if (actual_state > request_state)
             {
                 actual_state -= movement_speed * delta;
                 if (actual_state <= request_state)
+                {
                     actual_state = request_state;
+                    onClosed.call();
+                }
             }
             setPosition(closed_position + (open_position - closed_position) * actual_state);
         }
@@ -47,12 +53,23 @@ public:
     {
         request_state = 0;
     }
+    
+    virtual void onRegisterScriptBindings(sp::ScriptBindingClass& script_binding_class) override
+    {
+        script_binding_class.bind("open", &Door::open);
+        script_binding_class.bind("close", &Door::close);
+        script_binding_class.bind("onOpened", onOpened);
+        script_binding_class.bind("onClosed", onClosed);
+    }
 private:
     double movement_speed;
     double request_state;
     double actual_state;
     sp::Vector2d open_position;
     sp::Vector2d closed_position;
+    
+    sp::script::Callback onOpened;
+    sp::script::Callback onClosed;
 };
 
 #endif//DOOR_H

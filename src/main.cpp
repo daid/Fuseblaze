@@ -80,6 +80,12 @@ public:
         if (player_count > 0)
             position /= double(player_count);
         setPosition(position);
+#ifdef DEBUG
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
+            setOrtographic(200.0);
+        else
+            setOrtographic(25.0);
+#endif
     }
 };
 
@@ -100,6 +106,7 @@ int main(int argc, char** argv)
     
     sp::SpriteManager::create("aim_laser", "weapons/aim_laser.png", sp::Vector2f(5, 15));
     sp::SpriteManager::create("effect_ring", "effect/ring.png", sp::Vector2f(1, 1));
+    sp::SpriteManager::create("blood", "effect/blood.png", sp::Vector2f(0.5, 0.5));
     
     {
         scene = new sp::Scene();
@@ -117,49 +124,29 @@ int main(int argc, char** argv)
         scene_layer->addRenderPass(new sp::BasicNodeRenderPass("window", scene, camera));
         shadow_pass = new ShadowRenderPass("window", scene, camera);
         scene_layer->addRenderPass(shadow_pass);
+#ifdef DEBUG
         scene_layer->addRenderPass(new sp::CollisionRenderPass("window", scene, camera));
+#endif
     }
     
     if (0)
     {
-        new Editor(gui_layer->getRoot(), "prefab/small_room1.prefab");
+        new Editor(gui_layer->getRoot(), "prefab/small_hallway_slow_door");
     }
     else
     {
-        shadow_pass->light_sources.add(new Player(0));
-        //Player* p = new Player(1);
-        //shadow_pass->light_sources.add(p);
-        //p->setPosition(sp::Vector2d(1, 5));
+        Player* p = new Player(0);
+        shadow_pass->light_sources.add(p);
         
+        if (0)
+        {
+            Player* p = new Player(1);
+            shadow_pass->light_sources.add(p);
+            p->setPosition(sp::Vector2d(0.1, 0));
+            p->setRotation(180);
+        }
         MapGenerator mg;
         mg.generate();
-        
-        /*
-        new Wall(sp::Vector2d(5, 0), 30, sp::Vector2f(0.5, 5), sp::HsvColor(111, 52, 56));
-        new Wall(sp::Vector2d(-5, 0), 0, sp::Vector2f(5, 5), sp::HsvColor(111, 52, 56));
-        new Wall(sp::Vector2d(-5, 3), 0, sp::Vector2f(5, 5), sp::HsvColor(111, 52, 56));
-        
-        Door* door = new Door(sp::Vector2d(5, 5), 15, sp::Vector2f(0.5, 5), sp::HsvColor(111, 0, 56));
-        
-        new Floor(sp::Vector2d(0, 5), 0, sp::Vector2f(2, 2), sp::HsvColor(0, 41, 25));
-        Trigger* trigger = new Trigger(sp::Vector2d(0, 5), 0, sp::Vector2f(2, 2));
-        trigger->onTriggerEnter = [door]()
-        {
-            door->open();
-        };
-        trigger->onTriggerExit = [door]()
-        {
-            door->close();
-        };
-
-        new Floor(sp::Vector2d(0, 0), 10, sp::Vector2f(25, 25), sp::HsvColor(228, 41, 25));
-
-        for(int n=0;n<2; n++)
-            (new Enemy())->setPosition(sp::Vector2d(10, 10+0.1*n));
-
-        for(int n=0; n<5; n++)
-            (new Crate())->setPosition(sp::Vector2d(0, -2));
-        */
     }
     engine->run();
     

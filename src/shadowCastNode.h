@@ -44,6 +44,38 @@ public:
         render_data.shader = sp::Shader::get("shader/wallShadow.shader");
     }
 
+    ShadowCastNode(sp::P<sp::SceneNode> parent, int index, float radius)
+    : sp::SceneNode(parent)
+    {
+        //Do not render per default, we use our custom render pass.
+        render_data.type = sp::RenderData::Type::None;
+        
+        std::vector<sp::Vector2f> points;
+        int point_count = 32;
+        for(int n=0; n<point_count; n++)
+        {
+            float a = (float(n) / float(point_count-1)) * (sp::pi * 2.0);
+            points.emplace_back(sin(a) * radius, cos(a) * radius);
+        }
+
+        std::vector<sp::MeshData::Vertex> vertices;
+        for(unsigned int n=0; n<points.size() - 1; n++)
+        {
+            sp::Vector2f p0 = points[n];
+            sp::Vector2f p1 = points[(n + 1) % points.size()];
+            vertices.emplace_back(sp::Vector3f(p0.x, p0.y, min_shadow_distance));
+            vertices.emplace_back(sp::Vector3f(p1.x, p1.y, min_shadow_distance));
+            vertices.emplace_back(sp::Vector3f(p0.x, p0.y, max_shadow_distance));
+
+            vertices.emplace_back(sp::Vector3f(p0.x, p0.y, max_shadow_distance));
+            vertices.emplace_back(sp::Vector3f(p1.x, p1.y, min_shadow_distance));
+            vertices.emplace_back(sp::Vector3f(p1.x, p1.y, max_shadow_distance));
+        }
+        render_data.mesh = std::make_shared<sp::MeshData>(vertices);
+        render_data.shader = sp::Shader::get("shader/wallShadow.shader");
+        render_data.order = index + 1;
+    }
+
     ShadowCastNode(sp::P<sp::SceneNode> parent, int index, float radius, float view_angle)
     : sp::SceneNode(parent)
     {
@@ -52,8 +84,6 @@ public:
         
         std::vector<sp::Vector2f> points;
         int point_count = 8;
-        if (radius > 10)
-            point_count = 32;
         for(int n=0; n<point_count; n++)
         {
             float rad = view_angle / 180.0 * sp::pi;

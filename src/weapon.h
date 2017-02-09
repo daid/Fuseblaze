@@ -13,14 +13,18 @@ public:
     
     virtual void onUpdate(float delta);
     virtual void fire();
+    virtual void reload();
     virtual void launchProjectile();
 private:
     sp::P<sp::SceneNode> aiming_node;
     
     float cooldown;
-
+    int ammo;
 protected:
+    int max_ammo;
+    bool auto_aim;
     float cooldown_delay;
+    float reload_delay;
 };
 
 #endif//WEAPON_H

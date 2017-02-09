@@ -30,7 +30,7 @@ public:
         //Forward field of view shadow
         new ShadowCastNode(this, index, 0.1, 110.0);
         //Maximum view distance shadow
-        new ShadowCastNode(this, index, 20, 0.0);
+        new ShadowCastNode(this, index, 20);
         
         weapon = new Weapon(this);
         
@@ -70,6 +70,10 @@ public:
         if (player_keys[index]->primary_fire.getUp())
         {
             weapon->fire();
+        }
+        if (player_keys[index]->secondary_fire.getUp())
+        {
+            weapon->reload();
         }
     }
 
