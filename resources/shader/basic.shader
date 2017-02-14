@@ -6,7 +6,7 @@ layout (location = 2) in vec2 uv;
 uniform mat4 projection_matrix;
 uniform mat4 camera_matrix;
 uniform mat4 object_matrix;
-uniform float object_scale;
+uniform vec3 object_scale;
 
 varying highp vec2 v_uv;
 

@@ -14,10 +14,13 @@ public:
     sp::io::Keybinding right;
     
     sp::io::Keybinding start;
-    sp::io::Keybinding primary_fire;
-    sp::io::Keybinding secondary_fire;
-    sp::io::Keybinding brake;
-    sp::io::Keybinding hold_rotation;
+    
+    sp::io::Keybinding fire;
+    sp::io::Keybinding reload;
+    sp::io::Keybinding pickup;
+    sp::io::Keybinding switch_weapon;
+    sp::io::Keybinding unknown1;
+    sp::io::Keybinding unknown2;
 private:
     PlayerKeys(int index);
 };

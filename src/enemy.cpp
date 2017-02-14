@@ -1,10 +1,12 @@
 #include "enemy.h"
 #include "effect.h"
 
+#include <sp2/collision/2d/circle.h>
+
 Enemy::Enemy()
 : sp::SceneNode(::scene->getRoot())
 {
-    vision_range = 25.0;
+    vision_range = 35.0;
     health = 3.0;
     movement_speed = 15.0;
     attack_cooldown = 0.0;

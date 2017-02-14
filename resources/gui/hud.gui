@@ -1,45 +1,63 @@
-[HUD] {
+[HUD_LEFT] {
     stretch: true
 
-    [ENERGY] {
+    [AMMO] {
         type: progressbar
-        alignment: bottom
+        alignment: bottomleft
         margin: 75
-        size: 1000, 50
+        size: 300, 50
         progress_alignment: left
-        theme_data: progressbar_energy
+        theme_data: progressbar_ammo
         
-        {
+        [WEAPON_LABEL] {
             @ref: INFO_LABEL_H
-            caption: Energy
+            caption: Pistol
         }
     }
 
-    [SHIELD] {
+    [HEALTH] {
         type: progressbar
         alignment: bottomleft
-        margin: 50, 75
-        size: 50, 600
-        progress_alignment: bottom
-        theme_data: progressbar_shield
-
-        {
-            @ref: INFO_LABEL_V
-            caption: Shield
-        }
-    }
-
-    [HULL] {
-        type: progressbar
-        alignment: bottomleft
-        margin: 120, 150
+        margin: 75, 150
         size: 50, 300
         progress_alignment: bottom
-        theme_data: progressbar_hull
+        theme_data: progressbar_health
 
         {
             @ref: INFO_LABEL_V
-            caption: Hull
+            caption: Health
+        }
+    }
+}
+
+[HUD_RIGHT] {
+    stretch: true
+
+    [AMMO] {
+        type: progressbar
+        alignment: bottomright
+        margin: 75
+        size: 300, 50
+        progress_alignment: left
+        theme_data: progressbar_ammo
+        
+        [WEAPON_LABEL] {
+            @ref: INFO_LABEL_H
+            caption: Pistol
+        }
+    }
+
+    [HEALTH] {
+        type: progressbar
+        alignment: bottomright
+        margin: 75, 150
+        size: 50, 300
+        progress_alignment: bottom
+        theme_data: progressbar_health
+
+        {
+            @ref: INFO_LABEL_V
+            caption: Health
         }
     }
 }

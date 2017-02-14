@@ -83,7 +83,7 @@ public:
         render_data.type = sp::RenderData::Type::None;
         
         std::vector<sp::Vector2f> points;
-        int point_count = 8;
+        int point_count = 16;
         for(int n=0; n<point_count; n++)
         {
             float rad = view_angle / 180.0 * sp::pi;

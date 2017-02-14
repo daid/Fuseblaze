@@ -3,9 +3,6 @@
 #include <sp2/logging.h>
 #include <sp2/io/directoryResourceProvider.h>
 #include <sp2/graphics/gui/theme.h>
-#include <sp2/graphics/gui/guiLoader.h>
-#include <sp2/graphics/gui/widget/button.h>
-#include <sp2/graphics/gui/widget/slider.h>
 #include <sp2/graphics/scene/graphicslayer.h>
 #include <sp2/graphics/scene/basicnoderenderpass.h>
 #include <sp2/graphics/scene/collisionrenderpass.h>
@@ -27,7 +24,9 @@
 #include "floor.h"
 #include "enemy.h"
 #include "trigger.h"
+#include "hudManager.h"
 #include "mapGenerator.h"
+#include "weapons/weaponInfo.h"
 #include "editor/editor.h"
 #include "editor/prototype.h"
 
@@ -35,7 +34,6 @@ sp::P<sp::Scene> scene;
 sp::P<sp::gui::GraphicsLayer> gui_layer;
 sp::P<sp::CameraNode> camera;
 sp::P<sp::SceneGraphicsLayer> scene_layer;
-sp::PList<Player> Player::players;
 
 class Crate : public sp::SceneNode
 {
@@ -86,6 +84,8 @@ public:
         else
             setOrtographic(25.0);
 #endif
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+            sp::Engine::getInstance()->shutdown();
     }
 };
 
@@ -103,9 +103,11 @@ int main(int argc, char** argv)
     
     //Initialize the player keys, needs to be done before keybindings are loaded.
     PlayerKeys::init();
+    WeaponInfo::init();
     
     sp::SpriteManager::create("aim_laser", "weapons/aim_laser.png", sp::Vector2f(5, 15));
     sp::SpriteManager::create("effect_ring", "effect/ring.png", sp::Vector2f(1, 1));
+    sp::SpriteManager::create("weapon_trace", "weapons/trace.png", sp::Vector2f(1, 0.1));
     sp::SpriteManager::create("blood", "effect/blood.png", sp::Vector2f(0.5, 0.5));
     
     {
@@ -121,17 +123,20 @@ int main(int argc, char** argv)
         camera = new CameraController(scene->getRoot());
 
         scene_layer = new sp::SceneGraphicsLayer(10);
-        scene_layer->addRenderPass(new sp::BasicNodeRenderPass("window", scene, camera));
         shadow_pass = new ShadowRenderPass("window", scene, camera);
         scene_layer->addRenderPass(shadow_pass);
 #ifdef DEBUG
-        scene_layer->addRenderPass(new sp::CollisionRenderPass("window", scene, camera));
+        //scene_layer->addRenderPass(new sp::CollisionRenderPass("window", scene, camera));
 #endif
+    }
+    
+    {
+        new HudManager(scene->getRoot());
     }
     
     if (0)
     {
-        new Editor(gui_layer->getRoot(), "prefab/small_hallway_slow_door");
+        new Editor(gui_layer->getRoot(), "prefab/medium_corner_2");
     }
     else
     {

@@ -31,6 +31,10 @@ private:
     int open_ends;
 
     bool expandMap(int depth, sp::Vector2d position, double rotation, Prefab& prefab, int entrance_index);
+    
+    Prefab& randomRoomPrefab(Prefab::Part* part);
+    Prefab& randomConnectorPrefab(Prefab::Part* part);
+    int randomPartThatMatches(std::vector<Prefab::Part>& parts, Prefab::Part* connector_part);
 };
 
 #endif//MAP_GENERATOR_H

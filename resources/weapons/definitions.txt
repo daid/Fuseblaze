@@ -1,0 +1,61 @@
+[Pistol] {
+    ammo_per_clip: 9
+    cooldown_delay: 0.1
+    reload_delay: 1.0
+    
+    projectile_count: 1
+    trace_shot: true
+    
+    damage_per_hit: 1.0
+    range: 20
+    
+    auto_aim: true
+}
+
+[Shotgun] {
+    ammo_per_clip: 2
+    cooldown_delay: 0.3
+    reload_delay: 1.0
+    
+    projectile_count: 5
+    projectile_spread: 15
+    trace_shot: true
+    
+    damage_per_hit: 0.8
+    range: 15
+    
+    auto_aim: true
+}
+
+[Minigun] {
+    auto_fire: true
+    
+    ammo_per_clip: 40
+    cooldown_delay: 0.04
+    reload_delay: 5.0
+    
+    projectile_count: 1
+    projectile_spread: 10
+    trace_shot: true
+    
+    damage_per_hit: 1.0
+    range: 20
+    
+    auto_aim: true
+}
+
+[Railgun] {
+    ammo_per_clip: 5
+    cooldown_delay: 0.4
+    reload_delay: 2.0
+    
+    projectile_count: 1
+    projectile_spread: 0
+    trace_shot: true
+    pass_trough_enemies: true
+    
+    damage_per_hit: 2.5
+    range: 20
+    
+    auto_aim: true
+}

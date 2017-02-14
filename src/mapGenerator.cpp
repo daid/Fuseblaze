@@ -2,18 +2,24 @@
 #include "wall.h"
 #include "enemy.h"
 #include <sp2/random.h>
+#include <sp2/io/resourceProvider.h>
 
 MapGenerator::MapGenerator()
 {
-    room_prefabs.resize(5);
-    room_prefabs[0].load("prefab/small_hallway_t");
-    room_prefabs[1].load("prefab/small_hallway_corner");
-    room_prefabs[2].load("prefab/small_hallway");
-    room_prefabs[3].load("prefab/small_room1");
-    room_prefabs[4].load("prefab/small_hallway_slow_door");
-    connector_prefabs.resize(2);
-    connector_prefabs[0].load("prefab/small_door");
-    connector_prefabs[1].load("prefab/small_opening");
+    for(auto filename : sp::io::ResourceProvider::find("prefab/*.prefab"))
+    {
+        Prefab prefab;
+        prefab.load(filename.substr(0, -7));
+        
+        //Figure out the type of prefab.
+        auto connection_parts = prefab.getParts(Prefab::Part::Type::PrefabConnection);
+        if (connection_parts.size() > 1)
+        {
+            room_prefabs.push_back(prefab);
+        }else{
+            connector_prefabs.push_back(prefab);
+        }
+    }
 }
 
 void MapGenerator::generate()
@@ -22,7 +28,7 @@ void MapGenerator::generate()
     double spawn_rotation = 45;
 
     open_ends = 0;
-    expandMap(0, spawn_position, spawn_rotation, room_prefabs[3], -1);
+    expandMap(0, spawn_position, spawn_rotation, randomRoomPrefab(nullptr), -1);
     
     for(auto& pp : placed_prefabs)
     {
@@ -71,16 +77,13 @@ bool MapGenerator::expandMap(int depth, sp::Vector2d spawn_position, double spaw
         sp::Vector2d position = spawn_position + q * part.position;
         double rotation = spawn_rotation + part.rotation;
 
-        Prefab& prefab2 = room_prefabs[sp::irandom(0, room_prefabs.size() - 1)];
+        Prefab& prefab2 = randomRoomPrefab(&part);
         auto parts = prefab2.getParts(Prefab::Part::Type::PrefabConnection);
-        int index = sp::irandom(0, parts.size() - 1);
+        int index = randomPartThatMatches(parts, &part);
 
         if (expandMap(depth + 1, getPositionForPrefab(position, rotation, prefab, parts[index]), rotation + 180 - parts[index].rotation, prefab2, index))
         {
-            if (depth == 0)
-                connector_prefabs[0].spawn(position, rotation);
-            else
-                connector_prefabs[sp::irandom(0, connector_prefabs.size() - 1)].spawn(position, rotation);
+            randomConnectorPrefab(&part).spawn(position, rotation);
         }
         else
         {
@@ -94,4 +97,40 @@ sp::Vector2d MapGenerator::getPositionForPrefab(sp::Vector2d entrance_position, 
 {
     sp::Quaterniond q = sp::Quaterniond::fromAngle(entrance_rotation - entrance_part.rotation);
     return entrance_position + q * entrance_part.position;
+}
+
+Prefab& MapGenerator::randomRoomPrefab(Prefab::Part* connector_part)
+{
+    if (!connector_part)
+        return room_prefabs[sp::irandom(0, room_prefabs.size() - 1)];
+    while(true)
+    {
+        Prefab& prefab = room_prefabs[sp::irandom(0, room_prefabs.size() - 1)];
+        auto connections = prefab.getParts(Prefab::Part::Type::PrefabConnection);
+        if (connections[sp::irandom(0, connections.size() - 1)].size == connector_part->size)
+            return prefab;
+    }
+}
+
+Prefab& MapGenerator::randomConnectorPrefab(Prefab::Part* connector_part)
+{
+    if (!connector_part)
+        return connector_prefabs[sp::irandom(0, connector_prefabs.size() - 1)];
+    while(true)
+    {
+        Prefab& prefab = connector_prefabs[sp::irandom(0, connector_prefabs.size() - 1)];
+        auto connections = prefab.getParts(Prefab::Part::Type::PrefabConnection);
+        if (connections[sp::irandom(0, connections.size() - 1)].size == connector_part->size)
+            return prefab;
+    }
+}
+
+int MapGenerator::randomPartThatMatches(std::vector<Prefab::Part>& parts, Prefab::Part* connector_part)
+{
+    while(true)
+    {
+        int index = sp::irandom(0, parts.size() - 1);
+        if (parts[index].size == connector_part->size)
+            return index;
+    }
 }

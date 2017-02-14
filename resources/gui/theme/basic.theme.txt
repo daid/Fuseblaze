@@ -23,14 +23,11 @@
         background.image: gui/theme/basic/progressbar_background.png
         forground.image: gui/theme/basic/progressbar_fill.png
         
-        [progressbar_energy] {
-            forground.color: #33a020
+        [progressbar_ammo] {
+            forground.color: #808080
         }
-        [progressbar_shield] {
-            forground.color: #8080ff
-        }
-        [progressbar_hull] {
-            forground.color: #808040
+        [progressbar_health] {
+            forground.color: #EE2020
         }
     }
 }
