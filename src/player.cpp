@@ -26,8 +26,10 @@ Player::Player(int index)
     //Maximum view distance shadow
     new ShadowCastNode(this, index, 30);
     
-    weapon = new Weapon(WeaponInfo::get("Railgun"), this);
+    weapon = new Weapon(WeaponInfo::get("Shotgun"), this);
     alternative_weapon = "Minigun";
+
+    max_hp = hp = 10.0;
     
     players.add(this);
 }
@@ -80,4 +82,11 @@ void Player::onUpdate(float delta)
     {
         weapon->reload();
     }
+}
+
+void Player::takeDamage(float amount)
+{
+    hp -= amount;
+    if (hp <= 0.0)
+        delete this;
 }

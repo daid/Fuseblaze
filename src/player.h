@@ -16,7 +16,12 @@ public:
     
     virtual void onUpdate(float delta) override;
 
+    void takeDamage(float amount);
+
     int index;
+    
+    float hp;
+    float max_hp;
     
     sp::P<Weapon> weapon;
     sp::string alternative_weapon;

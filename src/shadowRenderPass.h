@@ -17,7 +17,7 @@ public:
     
     virtual void render(sf::RenderTarget& target, sp::P<sp::GraphicsLayer> layer, float aspect_ratio)
     {
-        if (single_scene->isEnabled() && specific_camera && light_sources.size() > 0)
+        if (single_scene->isEnabled() && specific_camera)
         {
             camera->setAspectRatio(aspect_ratio);
 
@@ -55,6 +55,7 @@ public:
             glDepthMask(GL_TRUE);
             glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
 
+            if (light_sources.size() > 0)
             {
                 sp::RenderQueue queue2;
 

@@ -62,6 +62,7 @@ void Enemy::onCollision(sp::CollisionInfo& info)
     {
         new Effect(info.position);
         player->setLinearVelocity(info.normal * 10.0);
+        player->takeDamage(1.0);
         
         attack_cooldown = 0.5;
     }

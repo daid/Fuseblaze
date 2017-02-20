@@ -40,4 +40,11 @@ void HudManager::update(Player* player, sp::P<sp::gui::Widget> hud)
     label = hud->getWidgetWithID("WEAPON_LABEL");
     if (label)
         label->setLabel(player->weapon->info.name);
+
+    bar = hud->getWidgetWithID("HEALTH");
+    if (bar)
+    {
+        bar->setValue(player->hp);
+        bar->setRange(0, player->max_hp);
+    }
 }

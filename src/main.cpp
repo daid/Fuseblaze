@@ -63,7 +63,6 @@ public:
     {
         setOrtographic(25.0);
         setRotation(-90);
-        setPosition(sp::Vector2d(5, 0));
     }
 
     virtual void onUpdate(float delta)
@@ -76,8 +75,10 @@ public:
             player_count++;
         }
         if (player_count > 0)
+        {
             position /= double(player_count);
-        setPosition(position);
+            setPosition(position);
+        }
 #ifdef DEBUG
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
             setOrtographic(200.0);
