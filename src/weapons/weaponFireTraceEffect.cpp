@@ -21,7 +21,7 @@ void WeaponFireTraceEffect::onUpdate(float delta)
 {
     lifetime -= delta;
     
-    render_data.color = sp::Tween<sp::Color>::easeOutQuad(lifetime, 0.2, 0.0, sp::Color(255, 255, 255, 128), sp::Color(255, 255, 255, 0));
+    render_data.color = sp::Tween<sp::Color>::easeOutQuad(lifetime, 0.2, 0.0, sp::Color(255, 255, 255, 192), sp::Color(255, 255, 255, 0));
     
     if (lifetime < 0.0)
         delete this;

@@ -22,7 +22,7 @@
 #include "shadowRenderPass.h"
 #include "player.h"
 #include "floor.h"
-#include "enemy.h"
+#include "enemies/enemy.h"
 #include "trigger.h"
 #include "hudManager.h"
 #include "mapGenerator.h"
@@ -144,7 +144,7 @@ int main(int argc, char** argv)
         Player* p = new Player(0);
         shadow_pass->light_sources.add(p);
         
-        if (0)
+        if (1)
         {
             Player* p = new Player(1);
             shadow_pass->light_sources.add(p);

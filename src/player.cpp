@@ -15,7 +15,10 @@ Player::Player(int index)
     render_data.type = sp::RenderData::Type::Normal;
     render_data.shader = sp::Shader::get("shader/color.shader");
     render_data.mesh = sp::MeshData::createQuad(sp::Vector2f(1, 1));
-    render_data.color = sp::HsvColor(0, 70, 50);
+    if (index == 0)
+        render_data.color = sp::HsvColor(0, 70, 50);
+    else
+        render_data.color = sp::HsvColor(30, 70, 50);
     
     sp::collision::Circle2D circle(0.5);
     setCollisionShape(circle);

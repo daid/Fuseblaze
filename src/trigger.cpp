@@ -1,7 +1,7 @@
 #include "trigger.h"
 #include "main.h"
 #include "player.h"
-#include "enemy.h"
+#include "enemies/enemy.h"
 
 #include <sp2/collision/2d/box.h>
 

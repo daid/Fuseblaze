@@ -1,6 +1,7 @@
 #include "mapGenerator.h"
 #include "wall.h"
-#include "enemy.h"
+#include "enemies/enemy.h"
+#include "enemies/hulk.h"
 #include <sp2/random.h>
 #include <sp2/io/resourceProvider.h>
 
@@ -39,6 +40,11 @@ void MapGenerator::generate()
             sp::Vector2d position = pp.position + sp::Quaterniond::fromAngle(pp.rotation) * part.position;
             
             int enemy_count = part.size.x * part.size.y;
+            if (enemy_count >= 9 && sp::random(0, 100) < 20)
+            {
+                (new Hulk())->setPosition(position + sp::Vector2d(sp::random(-part.size.x / 2.0, part.size.x / 2.0), sp::random(-part.size.y / 2.0, part.size.y / 2.0)));
+                enemy_count -= 9;
+            }
             for(int n=0; n<enemy_count; n++)
                 (new Enemy())->setPosition(position + sp::Vector2d(sp::random(-part.size.x / 2.0, part.size.x / 2.0), sp::random(-part.size.y / 2.0, part.size.y / 2.0)));
         }

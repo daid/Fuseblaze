@@ -1,6 +1,7 @@
 #include "enemy.h"
-#include "effect.h"
+#include "../effect.h"
 
+#include <sp2/random.h>
 #include <sp2/collision/2d/circle.h>
 
 Enemy::Enemy()
@@ -14,7 +15,7 @@ Enemy::Enemy()
     render_data.type = sp::RenderData::Type::Normal;
     render_data.shader = sp::Shader::get("shader/color.shader");
     render_data.mesh = sp::MeshData::createQuad(sp::Vector2f(1, 1));
-    render_data.color = sp::HsvColor(200, 70, 50);
+    render_data.color = sp::HsvColor(sp::random(190, 210), 70, 50);
     
     sp::collision::Circle2D circle(0.5);
     circle.angular_damping = 5;
@@ -22,7 +23,7 @@ Enemy::Enemy()
     setCollisionShape(circle);
     setPosition(sp::Vector2d(0, 0));
 }
-    
+
 void Enemy::onUpdate(float delta)
 {
     if (attack_cooldown > 0.0)

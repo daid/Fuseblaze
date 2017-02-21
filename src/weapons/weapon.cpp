@@ -1,7 +1,7 @@
 #include "weapon.h"
 #include "weaponFireTraceEffect.h"
 #include "../player.h"
-#include "../enemy.h"
+#include "../enemies/enemy.h"
 #include "../effect.h"
 #include "../blood.h"
 #include <sp2/graphics/spriteManager.h>

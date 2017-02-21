@@ -1,8 +1,8 @@
 #ifndef ENEMY_H
 #define ENEMY_H
 
-#include "wall.h"
-#include "player.h"
+#include "../wall.h"
+#include "../player.h"
 
 class Enemy : public sp::SceneNode
 {
@@ -12,7 +12,7 @@ public:
     virtual void onUpdate(float delta) override;
     virtual void onCollision(sp::CollisionInfo& info) override;
 
-    void takeDamage(double amount);
+    virtual void takeDamage(double amount);
 protected:
     float vision_range;
     double movement_speed;
