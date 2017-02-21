@@ -10,8 +10,18 @@
 HudManager::HudManager(sp::P<sp::SceneNode> root)
 : sp::SceneNode(root)
 {
-    huds[0] = sp::gui::Loader::load("gui/hud.gui", "HUD_LEFT", gui_layer->getRoot());
-    huds[1] = sp::gui::Loader::load("gui/hud.gui", "HUD_RIGHT", gui_layer->getRoot());
+    huds[0] = sp::gui::Loader::load("gui/hud.gui", "HUD", gui_layer->getRoot());
+    huds[1] = sp::gui::Loader::load("gui/hud.gui", "HUD", gui_layer->getRoot());
+    
+    for(auto widget : huds[1]->children)
+    {
+        if (widget->layout.alignment == sp::gui::Widget::Alignment::BottomLeft)
+            widget->layout.alignment = sp::gui::Widget::Alignment::BottomRight;
+        if (widget->layout.alignment == sp::gui::Widget::Alignment::Left)
+            widget->layout.alignment = sp::gui::Widget::Alignment::Right;
+        if (widget->layout.alignment == sp::gui::Widget::Alignment::TopLeft)
+            widget->layout.alignment = sp::gui::Widget::Alignment::TopRight;
+    }
 }
 
 void HudManager::onUpdate(float delta)
@@ -40,6 +50,10 @@ void HudManager::update(Player* player, sp::P<sp::gui::Widget> hud)
     label = hud->getWidgetWithID("WEAPON_LABEL");
     if (label)
         label->setLabel(player->weapon->info.name);
+
+    label = hud->getWidgetWithID("ALT_WEAPON_LABEL");
+    if (label)
+        label->setLabel(player->alternative_weapon);
 
     bar = hud->getWidgetWithID("HEALTH");
     if (bar)

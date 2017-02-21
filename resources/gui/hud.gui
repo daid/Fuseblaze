@@ -1,4 +1,4 @@
-[HUD_LEFT] {
+[HUD] {
     stretch: true
 
     [AMMO] {
@@ -15,41 +15,19 @@
         }
     }
 
+    [ALT_WEAPON] {
+        alignment: bottomleft
+        margin: 75, 30
+        size: 300, 50
+        [ALT_WEAPON_LABEL] {
+            @ref: INFO_LABEL_H
+            caption: Pistol2
+        }
+    }
+
     [HEALTH] {
         type: progressbar
         alignment: bottomleft
-        margin: 75, 150
-        size: 50, 300
-        progress_alignment: bottom
-        theme_data: progressbar_health
-
-        {
-            @ref: INFO_LABEL_V
-            caption: Health
-        }
-    }
-}
-
-[HUD_RIGHT] {
-    stretch: true
-
-    [AMMO] {
-        type: progressbar
-        alignment: bottomright
-        margin: 75
-        size: 300, 50
-        progress_alignment: left
-        theme_data: progressbar_ammo
-        
-        [WEAPON_LABEL] {
-            @ref: INFO_LABEL_H
-            caption: Pistol
-        }
-    }
-
-    [HEALTH] {
-        type: progressbar
-        alignment: bottomright
         margin: 75, 150
         size: 50, 300
         progress_alignment: bottom
