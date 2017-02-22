@@ -27,7 +27,7 @@ MapGenerator::MapGenerator()
 void MapGenerator::generate()
 {
     sp::Vector2d spawn_position(0, 0);
-    double spawn_rotation = 45;
+    double spawn_rotation = sp::random(0, 360);
 
     open_ends = 0;
     expandMap(0, spawn_position, spawn_rotation, randomRoomPrefab(nullptr), -1);

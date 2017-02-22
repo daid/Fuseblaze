@@ -54,9 +54,15 @@ public:
         request_state = 0;
     }
     
+    void setMovementSpeed(double speed)
+    {
+        movement_speed = speed;
+    }
+    
     virtual void onRegisterScriptBindings(sp::ScriptBindingClass& script_binding_class) override
     {
         script_binding_class.bind("open", &Door::open);
+        script_binding_class.bind("setMovementSpeed", &Door::setMovementSpeed);
         script_binding_class.bind("close", &Door::close);
         script_binding_class.bind("onOpened", onOpened);
         script_binding_class.bind("onClosed", onClosed);
