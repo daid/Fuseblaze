@@ -2,6 +2,7 @@
 #include "wall.h"
 #include "enemies/enemy.h"
 #include "enemies/hulk.h"
+#include "enemies/screamer.h"
 #include <sp2/random.h>
 #include <sp2/io/resourceProvider.h>
 
@@ -40,13 +41,18 @@ void MapGenerator::generate()
             sp::Vector2d position = pp.position + sp::Quaterniond::fromAngle(pp.rotation) * part.position;
             
             int enemy_count = part.size.x * part.size.y;
-            if (enemy_count >= 9 && sp::random(0, 100) < 20)
+            if (enemy_count >= 9 && sp::random(0, 100) < 5)
             {
                 (new Hulk())->setPosition(position + sp::Vector2d(sp::random(-part.size.x / 2.0, part.size.x / 2.0), sp::random(-part.size.y / 2.0, part.size.y / 2.0)));
                 enemy_count -= 9;
             }
             for(int n=0; n<enemy_count; n++)
-                (new Enemy())->setPosition(position + sp::Vector2d(sp::random(-part.size.x / 2.0, part.size.x / 2.0), sp::random(-part.size.y / 2.0, part.size.y / 2.0)));
+            {
+                if (sp::random(0, 100) < 10)
+                    (new Screamer())->setPosition(position + sp::Vector2d(sp::random(-part.size.x / 2.0, part.size.x / 2.0), sp::random(-part.size.y / 2.0, part.size.y / 2.0)));
+                else
+                    (new Enemy())->setPosition(position + sp::Vector2d(sp::random(-part.size.x / 2.0, part.size.x / 2.0), sp::random(-part.size.y / 2.0, part.size.y / 2.0)));
+            }
         }
     }
 }

@@ -61,7 +61,7 @@ void Enemy::onCollision(sp::CollisionInfo& info)
     sp::P<Player> player = info.other;
     if (player)
     {
-        new Effect(info.position);
+        new Effect(info.position, 1.0);
         player->setLinearVelocity(info.normal * 10.0);
         player->takeDamage(1.0);
         

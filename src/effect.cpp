@@ -3,8 +3,8 @@
 #include <sp2/tween.h>
 #include <sp2/graphics/spriteManager.h>
 
-Effect::Effect(sp::Vector2d position)
-: sp::SceneNode(::scene->getRoot())
+Effect::Effect(sp::Vector2d position, float scale)
+: sp::SceneNode(::scene->getRoot()), scale(scale)
 {
     setPosition(position);
     
@@ -20,7 +20,7 @@ void Effect::onUpdate(float delta)
     lifetime -= delta;
     
     render_data.color = sp::Tween<sp::Color>::easeOutQuad(lifetime, 0.3, 0.0, sp::Color::White, sp::Color(255, 255, 255, 0));
-    render_data.scale = sp::Tween<sp::Vector3f>::easeOutQuad(lifetime, 0.3, 0.0, sp::Vector3f(0.1, 0.1, 1.0), sp::Vector3f(2.0, 2.0, 1.0));
+    render_data.scale = sp::Tween<sp::Vector3f>::easeOutQuad(lifetime, 0.3, 0.0, sp::Vector3f(scale * 0.1, scale * 0.1, 1.0), sp::Vector3f(scale * 2.0, scale * 2.0, 1.0));
     
     if (lifetime < 0.0)
         delete this;

@@ -119,7 +119,7 @@ void Weapon::launchProjectile()
     {
         if (sp::P<Wall>(object))
         {
-            new Effect(hit_location);
+            new Effect(hit_location, 1.0);
             new WeaponFireTraceEffect(getGlobalPosition2D(), hit_location);
             hit = true;
             return false;
@@ -127,7 +127,7 @@ void Weapon::launchProjectile()
         sp::P<Enemy> enemy = object;
         if (enemy)
         {
-            new Effect(hit_location);
+            new Effect(hit_location, 1.0);
             if (!info.pass_trough_enemies)
                 new WeaponFireTraceEffect(getGlobalPosition2D(), hit_location);
             applyDamage(hit_location, hit_normal, enemy);

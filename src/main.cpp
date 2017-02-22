@@ -137,7 +137,7 @@ int main(int argc, char** argv)
     
     if (0)
     {
-        new Editor(gui_layer->getRoot(), "prefab/medium_corner_2");
+        new Editor(gui_layer->getRoot(), "prefab/medium_hallway_t");
     }
     else
     {

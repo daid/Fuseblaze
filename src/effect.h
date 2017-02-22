@@ -6,12 +6,13 @@
 class Effect : public sp::SceneNode
 {
 public:
-    Effect(sp::Vector2d position);
+    Effect(sp::Vector2d position, float scale);
     
     virtual void onUpdate(float delta) override;
 
 protected:
     float lifetime;
+    float scale;
 };
 
 #endif//EFFECT_H
