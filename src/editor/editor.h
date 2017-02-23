@@ -12,6 +12,7 @@ class Editor : public sp::gui::Widget
 public:
     Editor(sp::P<sp::gui::Widget> parent, sp::string prefab_name);
         
+    virtual void render(sf::RenderTarget& window) override;
     virtual bool onPointerDown(sp::io::Pointer::Button button, sp::Vector2f position, int id) override;
     
     virtual void onPointerDrag(sf::Vector2f position, int id) override;

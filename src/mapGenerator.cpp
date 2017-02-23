@@ -13,13 +13,18 @@ MapGenerator::MapGenerator()
         Prefab prefab;
         prefab.load(filename.substr(0, -7));
         
-        //Figure out the type of prefab.
-        auto connection_parts = prefab.getParts(Prefab::Part::Type::PrefabConnection);
-        if (connection_parts.size() > 1)
+        if (filename.startswith("prefab/special/"))
         {
-            room_prefabs.push_back(prefab);
+            special_prefabs[filename.substr(0, -7)] = prefab;
         }else{
-            connector_prefabs.push_back(prefab);
+            //Figure out the type of prefab.
+            auto connection_parts = prefab.getParts(Prefab::Part::Type::PrefabConnection);
+            if (connection_parts.size() > 1)
+            {
+                room_prefabs.push_back(prefab);
+            }else{
+                connector_prefabs.push_back(prefab);
+            }
         }
     }
 }
@@ -30,12 +35,22 @@ void MapGenerator::generate()
     double spawn_rotation = sp::random(0, 360);
 
     open_ends = 0;
-    expandMap(0, spawn_position, spawn_rotation, randomRoomPrefab(nullptr), -1);
+    expandMap(0, spawn_position, spawn_rotation, special_prefabs["prefab/special/start"], -1);
     
     for(auto& pp : placed_prefabs)
     {
         if (&pp == &placed_prefabs[0])
+        {
+            for(auto player : Player::players)
+            {
+                for(auto& part : pp.prefab.getParts(Prefab::Part::Type::Spawner))
+                {
+                    sp::Vector2d position = pp.position + sp::Quaterniond::fromAngle(pp.rotation) * part.position;
+                    player->setPosition(position + sp::Vector2d(sp::random(-part.size.x / 2.0, part.size.x / 2.0), sp::random(-part.size.y / 2.0, part.size.y / 2.0)));
+                }
+            }
             continue;
+        }
         for(auto& part : pp.prefab.getParts(Prefab::Part::Type::Spawner))
         {
             sp::Vector2d position = pp.position + sp::Quaterniond::fromAngle(pp.rotation) * part.position;

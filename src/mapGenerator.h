@@ -12,6 +12,7 @@ public:
     
     sp::Vector2d getPositionForPrefab(sp::Vector2d entrance_position, double entrance_rotation, Prefab& prefab, Prefab::Part& entrance_part);
 private:
+    std::map<sp::string, Prefab> special_prefabs;
     std::vector<Prefab> room_prefabs;
     std::vector<Prefab> connector_prefabs;
 

@@ -3,6 +3,7 @@
 #include "prototype.h"
 #include "../main.h"
 
+#include <SFML/Window/Keyboard.hpp>
 #include <sp2/graphics/gui/guiLoader.h>
 #include <sp2/engine.h>
 
@@ -76,6 +77,16 @@ Editor::Editor(sp::P<sp::gui::Widget> parent, sp::string prefab_name)
     Prefab prefab;
     prefab.load(prefab_name);
     prefab.createPrototypes();
+}
+
+void Editor::render(sf::RenderTarget& window)
+{
+    Widget::render(window);
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Delete) && selection)
+    {
+        LOG(Debug, "DEL");
+        delete *selection;
+    }
 }
 
 bool Editor::onPointerDown(sp::io::Pointer::Button button, sp::Vector2f position, int id)

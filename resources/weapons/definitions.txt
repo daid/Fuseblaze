@@ -35,7 +35,7 @@
     reload_delay: 3.0
     
     projectile_count: 1
-    projectile_spread: 10
+    projectile_spread: 16
     trace_shot: true
     
     damage_per_hit: 1.0

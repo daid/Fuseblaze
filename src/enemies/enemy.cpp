@@ -9,7 +9,7 @@ Enemy::Enemy()
 {
     vision_range = 35.0;
     health = 3.0;
-    movement_speed = 15.0;
+    movement_speed = 17.0;
     attack_cooldown = 0.0;
 
     render_data.type = sp::RenderData::Type::Normal;

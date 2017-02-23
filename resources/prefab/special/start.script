@@ -1,0 +1,6 @@
+door1.setMovementSpeed(0.1)
+door2.setMovementSpeed(0.1)
+trigger.onTriggerEnter(function()
+    door1.open()
+    door2.open()
+end)

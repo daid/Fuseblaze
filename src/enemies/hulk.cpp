@@ -7,7 +7,7 @@ Hulk::Hulk()
 {
     vision_range = 35.0;
     health = 50.0;
-    movement_speed = 7.0;
+    movement_speed = 12.0;
 
     render_data.type = sp::RenderData::Type::Normal;
     render_data.shader = sp::Shader::get("shader/color.shader");

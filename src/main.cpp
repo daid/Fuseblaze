@@ -137,7 +137,7 @@ int main(int argc, char** argv)
     
     if (0)
     {
-        new Editor(gui_layer->getRoot(), "prefab/medium_hallway_door");
+        new Editor(gui_layer->getRoot(), "prefab/special/start");
     }
     else
     {
@@ -146,7 +146,7 @@ int main(int argc, char** argv)
         
         if (1)
         {
-            Player* p = new Player(1);
+            p = new Player(1);
             shadow_pass->light_sources.add(p);
             p->setPosition(sp::Vector2d(0.1, 0));
             p->setRotation(180);

@@ -61,6 +61,8 @@ public:
     
     virtual void onRegisterScriptBindings(sp::ScriptBindingClass& script_binding_class) override
     {
+        Wall::onRegisterScriptBindings(script_binding_class);
+        
         script_binding_class.bind("open", &Door::open);
         script_binding_class.bind("setMovementSpeed", &Door::setMovementSpeed);
         script_binding_class.bind("close", &Door::close);
