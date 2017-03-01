@@ -2,6 +2,7 @@
 #include "player.h"
 #include "main.h"
 #include "weapons/weapon.h"
+#include "pickups/pickup.h"
 
 #include <sp2/graphics/gui/guiLoader.h>
 #include <sp2/graphics/gui/widget/label.h>
@@ -54,6 +55,18 @@ void HudManager::update(Player* player, sp::P<sp::gui::Widget> hud)
     label = hud->getWidgetWithID("ALT_WEAPON_LABEL");
     if (label)
         label->setLabel(player->alternative_weapon);
+    label = hud->getWidgetWithID("PICKUP_LABEL");
+    if (label)
+    {
+        if (player->touching_pickup)
+        {
+            label->layout.position = gui_layer->screenToVirtualPosition(camera->worldToScreen(player->getGlobalPosition2D()));
+            label->setLabel(player->touching_pickup->name);
+            label->show();
+        }else{
+            label->hide();
+        }
+    }
 
     bar = hud->getWidgetWithID("HEALTH");
     if (bar)

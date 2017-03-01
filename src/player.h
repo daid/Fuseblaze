@@ -5,6 +5,7 @@ class Weapon;
 
 #include <sp2/scene/node.h>
 
+class Pickup;
 class Player : public sp::SceneNode
 {
 public:
@@ -15,6 +16,7 @@ public:
     virtual void onFixedUpdate() override;
     
     virtual void onUpdate(float delta) override;
+    virtual void onCollision(sp::CollisionInfo& info) override;
 
     void takeDamage(float amount);
 
@@ -25,6 +27,9 @@ public:
     
     sp::P<Weapon> weapon;
     sp::string alternative_weapon;
+    
+    sp::P<Pickup> touching_pickup;
+    int touching_pickup_remove_delay;
 };
 
 #endif//PLAYER_H

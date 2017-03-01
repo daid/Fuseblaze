@@ -12,6 +12,9 @@
         background.image: gui/theme/basic/background.png
     }
     [label] {
+        [pickup_label] {
+            text.size: 20
+        }
     }
     [slider] {
         background.image: gui/theme/basic/slider_background.png

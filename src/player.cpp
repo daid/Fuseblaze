@@ -1,4 +1,5 @@
 #include "player.h"
+#include "pickups/pickup.h"
 
 #include "weapons/weapon.h"
 #include "main.h"
@@ -29,10 +30,11 @@ Player::Player(int index)
     //Maximum view distance shadow
     new ShadowCastNode(this, index, 30);
     
-    weapon = new Weapon(WeaponInfo::get("Shotgun"), this);
-    alternative_weapon = "Minigun";
+    weapon = new Weapon(WeaponInfo::get("Pistol"), this);
+    alternative_weapon = "";
 
     max_hp = hp = 10.0;
+    touching_pickup_remove_delay = 0;
     
     players.add(this);
 }
@@ -70,7 +72,7 @@ void Player::onFixedUpdate()
 
 void Player::onUpdate(float delta)
 {
-    if (player_keys[index]->switch_weapon.getUp())
+    if (player_keys[index]->switch_weapon.getUp() && alternative_weapon != "")
     {
         sp::string old_weapon = weapon->info.name;
         delete *weapon;
@@ -84,6 +86,27 @@ void Player::onUpdate(float delta)
     if (player_keys[index]->reload.getUp())
     {
         weapon->reload();
+    }
+
+    if (player_keys[index]->pickup.getUp() && touching_pickup)
+    {
+        touching_pickup->pickUpBy(this);
+    }
+    if (touching_pickup_remove_delay > 0)
+    {
+        touching_pickup_remove_delay--;
+        if (touching_pickup_remove_delay == 0)
+            touching_pickup = nullptr;
+    }
+}
+
+void Player::onCollision(sp::CollisionInfo& info)
+{
+    sp::P<Pickup> pickup = info.other;
+    if (pickup)
+    {
+        touching_pickup = pickup;
+        touching_pickup_remove_delay = 10;
     }
 }
 

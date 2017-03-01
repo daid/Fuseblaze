@@ -26,6 +26,7 @@
 #include "trigger.h"
 #include "hudManager.h"
 #include "mapGenerator.h"
+#include "pickups/weapon.h"
 #include "weapons/weaponInfo.h"
 #include "editor/editor.h"
 #include "editor/prototype.h"
@@ -151,6 +152,7 @@ int main(int argc, char** argv)
             p->setPosition(sp::Vector2d(0.1, 0));
             p->setRotation(180);
         }
+        new WeaponPickup();
         MapGenerator mg;
         mg.generate();
     }

@@ -25,6 +25,7 @@ public:
     
     static void init();
     static WeaponInfo& get(sp::string name);
+    static WeaponInfo& random();
 };
 
 #endif//WEAPON_INFO_H

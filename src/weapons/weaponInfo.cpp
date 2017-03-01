@@ -1,5 +1,6 @@
 #include "weaponInfo.h"
 #include <sp2/io/keyValueTreeLoader.h>
+#include <sp2/random.h>
 #include <unordered_map>
 
 std::unordered_map<sp::string, WeaponInfo> weapons;
@@ -46,4 +47,11 @@ void WeaponInfo::init()
 WeaponInfo& WeaponInfo::get(sp::string name)
 {
     return weapons[name];
+}
+
+WeaponInfo& WeaponInfo::random()
+{
+    auto it = weapons.begin();
+    std::advance(it, sp::irandom(0, weapons.size() - 1));
+    return it->second;
 }

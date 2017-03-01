@@ -144,7 +144,7 @@ void Weapon::launchProjectile()
 
 void Weapon::applyDamage(sp::Vector2d hit_location, sp::Vector2d hit_normal, sp::P<Enemy> enemy)
 {
-    enemy->setLinearVelocity(hit_normal * -10.0);
+    enemy->setLinearVelocity(enemy->getLinearVelocity2D() + hit_normal * -10.0);
     enemy->takeDamage(info.damage_per_hit);
     
     sp::Vector2d offset = sp::Quaterniond::fromAngle(getGlobalRotation2D() + sp::random(-5, 5)) * sp::Vector2d(0.5, 0.0);

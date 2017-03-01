@@ -156,8 +156,5 @@ void Editor::loadPrefab(sp::string filename)
 
 sp::Vector2d Editor::toWorld(sp::Vector2f position)
 {
-    sp::Vector2d screen_position = sp::Vector2d(gui_layer->virtualPositionToScreen(position)) * 2.0 - sp::Vector2d(1, 1);
-    screen_position.y = -screen_position.y;
-    sp::Vector2d world_position = camera->getProjectionMatrix().inverse() * screen_position;
-    return camera->getLocalPoint2D(world_position);
+    return camera->screenToWorld(gui_layer->virtualPositionToScreen(position));
 }

@@ -38,6 +38,13 @@
             caption: Health
         }
     }
+    
+    [PICKUP_LABEL] {
+        type: label
+        text_alignment: bottom
+        size: 0, 30
+        theme_data: pickup_label
+    }
 }
 
 [@INFO_LABEL_H] {
