@@ -60,6 +60,7 @@ void HudManager::update(Player* player, sp::P<sp::gui::Widget> hud)
     {
         if (player->touching_pickup)
         {
+            label->layout.alignment = sp::gui::Widget::Alignment::TopLeft;
             label->layout.position = gui_layer->screenToVirtualPosition(camera->worldToScreen(player->getGlobalPosition2D()));
             label->setLabel(player->touching_pickup->name);
             label->show();
