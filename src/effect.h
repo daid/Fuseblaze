@@ -3,7 +3,7 @@
 
 #include <sp2/scene/node.h>
 
-class Effect : public sp::SceneNode
+class Effect : public sp::Node
 {
 public:
     Effect(sp::Vector2d position, float scale);

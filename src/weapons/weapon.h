@@ -7,7 +7,7 @@ class Player;
 #include <sp2/scene/node.h>
 #include "weaponInfo.h"
 
-class Weapon : public sp::SceneNode
+class Weapon : public sp::Node
 {
 public:
     Weapon(WeaponInfo& info, sp::P<Player> player);
@@ -23,7 +23,7 @@ public:
     
     WeaponInfo& info;
 private:
-    sp::P<sp::SceneNode> aiming_node;
+    sp::P<sp::Node> aiming_node;
     
     float cooldown;
     int ammo;

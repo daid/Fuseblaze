@@ -7,7 +7,7 @@
 #include <sp2/random.h>
 
 Prototype::Prototype(Prefab::Part::Type type, sp::Vector2d position, double rotation, sp::Vector2f size)
-: sp::SceneNode(::scene->getRoot()), type(type)
+: sp::Node(::scene->getRoot()), type(type)
 {
     render_data.type = sp::RenderData::Type::Normal;
     render_data.shader = sp::Shader::get("shader/color.shader");

@@ -102,7 +102,7 @@ bool Editor::onPointerDown(sp::io::Pointer::Button button, sp::Vector2f position
     }
     selection = nullptr;
     
-    scene->queryCollision(world_position, [this](sp::P<sp::SceneNode> node)
+    scene->queryCollision(world_position, [this](sp::P<sp::Node> node)
     {
         sp::P<Prototype> prototype = node;
         if (prototype && prototype->type == selection_layer)

@@ -3,7 +3,7 @@
 
 #include <sp2/scene/node.h>
 
-class WeaponFireTraceEffect : public sp::SceneNode
+class WeaponFireTraceEffect : public sp::Node
 {
 public:
     WeaponFireTraceEffect(sp::Vector2d start_position, sp::Vector2d end_position);

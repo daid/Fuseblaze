@@ -11,7 +11,7 @@
 sp::PList<Player> Player::players;
 
 Player::Player(int index)
-: sp::SceneNode(::scene->getRoot()), index(index)
+: sp::Node(::scene->getRoot()), index(index)
 {
     render_data.type = sp::RenderData::Type::Normal;
     render_data.shader = sp::Shader::get("shader/color.shader");
@@ -50,7 +50,7 @@ void Player::onFixedUpdate()
     
     if (movement_request != sp::Vector2d(0.0, 0.0))
     {
-        setLinearVelocity(movement_request * 10.0);
+        setLinearVelocity(movement_request * 100.0);
         target_rotation = sp::toRotationAngle(movement_request);
     }
     else

@@ -5,7 +5,7 @@
 #include <sp2/graphics/spriteManager.h>
 
 BloodDecal::BloodDecal(sp::Vector2d position)
-: sp::SceneNode(::scene->getRoot())
+: sp::Node(::scene->getRoot())
 {
     setPosition(position);
     setRotation(sp::random(0, 360));

@@ -5,11 +5,11 @@
 #include "shadowCastNode.h"
 #include <sp2/collision/2d/box.h>
 
-class Wall : public sp::SceneNode
+class Wall : public sp::Node
 {
 public:
     Wall(sp::Vector2d position, double rotation, sp::Vector2f size, sp::Color color)
-    : sp::SceneNode(::scene->getRoot())
+    : sp::Node(::scene->getRoot())
     {
         render_data.type = sp::RenderData::Type::Normal;
         render_data.shader = sp::Shader::get("shader/color.shader");

@@ -15,6 +15,7 @@
 #include <sp2/collision/2d/circle.h>
 
 #include <fstream>
+#include "dynamicSectorLoader.h"
 
 #include "keys.h"
 #include "wall.h"
@@ -36,11 +37,11 @@ sp::P<sp::gui::GraphicsLayer> gui_layer;
 sp::P<sp::CameraNode> camera;
 sp::P<sp::SceneGraphicsLayer> scene_layer;
 
-class Crate : public sp::SceneNode
+class Crate : public sp::Node
 {
 public:
     Crate()
-    : sp::SceneNode(::scene->getRoot())
+    : sp::Node(::scene->getRoot())
     {
         render_data.type = sp::RenderData::Type::Normal;
         render_data.shader = sp::Shader::get("shader/color.shader");
@@ -59,7 +60,7 @@ public:
 class CameraController : public sp::CameraNode
 {
 public:
-    CameraController(sp::P<sp::SceneNode> parent)
+    CameraController(sp::P<sp::Node> parent)
     : sp::CameraNode(parent)
     {
         setOrtographic(25.0);
@@ -82,7 +83,7 @@ public:
         }
 #ifdef DEBUG
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
-            setOrtographic(200.0);
+            setOrtographic(500.0);
         else
             setOrtographic(25.0);
 #endif
@@ -113,7 +114,7 @@ int main(int argc, char** argv)
     sp::SpriteManager::create("blood", "effect/blood.png", sp::Vector2f(0.5, 0.5));
     
     {
-        scene = new sp::Scene();
+        scene = new sp::Scene("main_scene");
     }
     
     sp::P<ShadowRenderPass> shadow_pass;
@@ -135,7 +136,6 @@ int main(int argc, char** argv)
     {
         new HudManager(scene->getRoot());
     }
-    
     if (0)
     {
         new Editor(gui_layer->getRoot(), "prefab/special/start");
@@ -145,7 +145,7 @@ int main(int argc, char** argv)
         Player* p = new Player(0);
         shadow_pass->light_sources.add(p);
         
-        if (1)
+        if (0)
         {
             p = new Player(1);
             shadow_pass->light_sources.add(p);
@@ -153,8 +153,10 @@ int main(int argc, char** argv)
             p->setRotation(180);
         }
         new WeaponPickup();
-        MapGenerator mg;
-        mg.generate();
+        //MapGenerator mg;
+        //mg.generate();
+        
+        new DynamicSectorLoader();
     }
     engine->run();
     

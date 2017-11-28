@@ -5,7 +5,7 @@
 #include <sp2/collision/2d/circle.h>
 
 Enemy::Enemy()
-: sp::SceneNode(::scene->getRoot())
+: sp::Node(::scene->getRoot())
 {
     vision_range = 35.0;
     health = 3.0;
@@ -92,7 +92,7 @@ void Enemy::updateTargetPlayer()
             continue;
 
         bool visible = true;
-        ::scene->queryCollisionAny(position, player_position, [&visible](sp::P<sp::SceneNode> object, sp::Vector2d hit_location, sp::Vector2d hit_normal)
+        ::scene->queryCollisionAny(position, player_position, [&visible](sp::P<sp::Node> object, sp::Vector2d hit_location, sp::Vector2d hit_normal)
         {
             if (sp::P<Wall>(object))
             {

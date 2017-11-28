@@ -3,7 +3,7 @@
 
 #include <sp2/scene/node.h>
 
-class EditorHandle : public sp::SceneNode
+class EditorHandle : public sp::Node
 {
 public:
     enum Type
@@ -13,7 +13,7 @@ public:
         ScaleY
     };
 
-    EditorHandle(sp::P<sp::SceneNode> parent, sp::Vector2d offset, Type type);
+    EditorHandle(sp::P<sp::Node> parent, sp::Vector2d offset, Type type);
     virtual void dragTo(sp::Vector2d position);
 
 private:

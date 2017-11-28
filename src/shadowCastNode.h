@@ -4,11 +4,11 @@
 #include "main.h"
 #include <sp2/graphics/meshdata.h>
 
-class ShadowCastNode : public sp::SceneNode
+class ShadowCastNode : public sp::Node
 {
 public:
-    ShadowCastNode(sp::P<sp::SceneNode> parent, sp::Vector2f size)
-    : sp::SceneNode(parent)
+    ShadowCastNode(sp::P<sp::Node> parent, sp::Vector2f size)
+    : sp::Node(parent)
     {
         //Do not render per default, we use our custom render pass.
         render_data.type = sp::RenderData::Type::None;
@@ -44,8 +44,8 @@ public:
         render_data.shader = sp::Shader::get("shader/wallShadow.shader");
     }
 
-    ShadowCastNode(sp::P<sp::SceneNode> parent, int index, float radius)
-    : sp::SceneNode(parent)
+    ShadowCastNode(sp::P<sp::Node> parent, int index, float radius)
+    : sp::Node(parent)
     {
         //Do not render per default, we use our custom render pass.
         render_data.type = sp::RenderData::Type::None;
@@ -76,8 +76,8 @@ public:
         render_data.order = index + 1;
     }
 
-    ShadowCastNode(sp::P<sp::SceneNode> parent, int index, float radius, float view_angle)
-    : sp::SceneNode(parent)
+    ShadowCastNode(sp::P<sp::Node> parent, int index, float radius, float view_angle)
+    : sp::Node(parent)
     {
         //Do not render per default, we use our custom render pass.
         render_data.type = sp::RenderData::Type::None;

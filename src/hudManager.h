@@ -5,10 +5,10 @@
 #include <sp2/scene/node.h>
 
 class Player;
-class HudManager : public sp::SceneNode
+class HudManager : public sp::Node
 {
 public:
-    HudManager(sp::P<sp::SceneNode> root);
+    HudManager(sp::P<sp::Node> root);
     
     virtual void onUpdate(float delta) override;
 

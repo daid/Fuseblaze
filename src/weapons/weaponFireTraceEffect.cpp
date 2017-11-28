@@ -4,7 +4,7 @@
 #include <sp2/graphics/spriteManager.h>
 
 WeaponFireTraceEffect::WeaponFireTraceEffect(sp::Vector2d start_position, sp::Vector2d end_position)
-: sp::SceneNode(::scene->getRoot())
+: sp::Node(::scene->getRoot())
 {
     setPosition((start_position + end_position) / 2.0);
     setRotation(sp::toRotationAngle(end_position - start_position));

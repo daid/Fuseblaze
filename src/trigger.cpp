@@ -6,7 +6,7 @@
 #include <sp2/collision/2d/box.h>
 
 Trigger::Trigger(sp::Vector2d position, double rotation, sp::Vector2f size)
-: sp::SceneNode(::scene->getRoot())
+: sp::Node(::scene->getRoot())
 {
     setPosition(position);
     setRotation(rotation);

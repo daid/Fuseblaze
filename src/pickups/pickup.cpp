@@ -6,7 +6,7 @@
 #include <sp2/collision/2d/circle.h>
 
 Pickup::Pickup()
-: sp::SceneNode(::scene->getRoot())
+: sp::Node(::scene->getRoot())
 {
     render_data.type = sp::RenderData::Type::Normal;
     render_data.shader = sp::Shader::get("shader/color.shader");

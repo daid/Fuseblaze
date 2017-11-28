@@ -4,7 +4,7 @@
 #include "../wall.h"
 #include "../player.h"
 
-class Enemy : public sp::SceneNode
+class Enemy : public sp::Node
 {
 public:
     Enemy();

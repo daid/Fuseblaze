@@ -9,10 +9,10 @@
 #include <sp2/random.h>
 
 Weapon::Weapon(WeaponInfo& info, sp::P<Player> player)
-: sp::SceneNode(player), info(info)
+: sp::Node(player), info(info)
 {
     //Aiming laser
-    aiming_node = new sp::SceneNode(this);
+    aiming_node = new sp::Node(this);
     aiming_node->render_data = sp::SpriteManager::get("aim_laser");
     aiming_node->render_data.type = sp::RenderData::Type::Additive;
     aiming_node->render_data.color = sp::Color::Red;
@@ -33,7 +33,7 @@ void Weapon::onUpdate(float delta)
         double target_angle = 0.0;
         double angle = getParent()->getGlobalRotation2D();
         sp::P<Enemy> target;
-        getScene()->queryCollision(getGlobalPosition2D(), info.range, [this, angle, &target, &target_distance, &target_angle](sp::P<sp::SceneNode> object)
+        getScene()->queryCollision(getGlobalPosition2D(), info.range, [this, angle, &target, &target_distance, &target_angle](sp::P<sp::Node> object)
         {
             sp::P<Enemy> enemy = object;
             if (enemy)
@@ -45,7 +45,7 @@ void Weapon::onUpdate(float delta)
                     if (std::abs(sp::angleDifference(enemy_angle, 0.0)) < 55)
                     {
                         bool visible = true;
-                        ::scene->queryCollisionAny(getGlobalPosition2D(), enemy->getGlobalPosition2D(), [&visible](sp::P<sp::SceneNode> object, sp::Vector2d hit_location, sp::Vector2d hit_normal)
+                        ::scene->queryCollisionAny(getGlobalPosition2D(), enemy->getGlobalPosition2D(), [&visible](sp::P<sp::Node> object, sp::Vector2d hit_location, sp::Vector2d hit_normal)
                         {
                             if (sp::P<Wall>(object))
                             {
@@ -115,7 +115,7 @@ void Weapon::launchProjectile()
     sp::Vector2d position = getGlobalPosition2D();
     sp::Vector2d end_position = position + sp::Quaterniond::fromAngle(angle) * sp::Vector2d(info.range, 0.0);
     bool hit = false;
-    ::scene->queryCollisionAll(position, end_position, [this, &hit](sp::P<sp::SceneNode> object, sp::Vector2d hit_location, sp::Vector2d hit_normal)
+    ::scene->queryCollisionAll(position, end_position, [this, &hit](sp::P<sp::Node> object, sp::Vector2d hit_location, sp::Vector2d hit_normal)
     {
         if (sp::P<Wall>(object))
         {

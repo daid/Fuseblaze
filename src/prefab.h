@@ -34,7 +34,7 @@ public:
     void load(sp::string filename);
     void save(sp::string filename);
     
-    std::map<sp::string, sp::P<sp::SceneNode>> spawn(sp::Vector2d position, double rotation);
+    std::map<sp::string, sp::P<sp::Node>> spawn(sp::Vector2d position, double rotation);
     std::vector<Part> getParts(Part::Type type);
     void createPrototypes();
     void updateFromPrototypes();

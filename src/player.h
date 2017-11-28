@@ -6,7 +6,7 @@ class Weapon;
 #include <sp2/scene/node.h>
 
 class Pickup;
-class Player : public sp::SceneNode
+class Player : public sp::Node
 {
 public:
     static sp::PList<Player> players;

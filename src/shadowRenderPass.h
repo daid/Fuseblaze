@@ -37,7 +37,7 @@ public:
             glDepthMask(GL_FALSE);
             
             int n = 0;
-            for(sp::SceneNode* light_source : light_sources)
+            for(sp::Node* light_source : light_sources)
             {
                 glStencilMask(1 << n);
                 glStencilFunc(GL_ALWAYS, 1 << n, 1 << n);
@@ -66,7 +66,7 @@ public:
                 render_data.color = sp::Color::Black;
                 queue2.add(sp::Matrix4x4d::identity(), render_data);
 
-                queue2.render(camera->getProjectionMatrix(), camera->getGlobalTransform().inverse(), target);
+                //queue2.render(camera->getProjectionMatrix(), camera->getGlobalTransform().inverse(), target);
             }
 
             glDisable(GL_STENCIL_TEST);
@@ -75,7 +75,7 @@ public:
         }
     }
 
-    void recursiveNodeRender(sp::SceneNode* node)
+    void recursiveNodeRender(sp::Node* node)
     {
         if (node->render_data.type == sp::RenderData::Type::None)
         {
@@ -100,13 +100,13 @@ public:
                 post_shadow_queue.add(node->getGlobalTransform(), node->render_data);
         }
 
-        for(sp::SceneNode* child : node->getChildren())
+        for(sp::Node* child : node->getChildren())
         {
             recursiveNodeRender(child);
         }
     }
 
-    sp::PList<sp::SceneNode> light_sources;
+    sp::PList<sp::Node> light_sources;
 private:
     sp::P<sp::Scene> single_scene;
     sp::P<sp::CameraNode> specific_camera;

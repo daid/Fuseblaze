@@ -4,11 +4,11 @@
 #include <sp2/scene/node.h>
 #include <sp2/graphics/meshdata.h>
 
-class Floor : public sp::SceneNode
+class Floor : public sp::Node
 {
 public:
     Floor(sp::Vector2d position, double rotation, sp::Vector2f size, sp::Color color)
-    : sp::SceneNode(::scene->getRoot())
+    : sp::Node(::scene->getRoot())
     {
         render_data.type = sp::RenderData::Type::Normal;
         render_data.shader = sp::Shader::get("shader/color.shader");

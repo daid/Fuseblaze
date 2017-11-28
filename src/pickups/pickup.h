@@ -4,7 +4,7 @@
 #include <sp2/scene/node.h>
 
 class Player;
-class Pickup : public sp::SceneNode
+class Pickup : public sp::Node
 {
 public:
     Pickup();

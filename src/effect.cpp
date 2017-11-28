@@ -4,7 +4,7 @@
 #include <sp2/graphics/spriteManager.h>
 
 Effect::Effect(sp::Vector2d position, float scale)
-: sp::SceneNode(::scene->getRoot()), scale(scale)
+: sp::Node(::scene->getRoot()), scale(scale)
 {
     setPosition(position);
     

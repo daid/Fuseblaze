@@ -4,7 +4,7 @@
 #include <sp2/scene/node.h>
 #include "../prefab.h"
 
-class Prototype : public sp::SceneNode
+class Prototype : public sp::Node
 {
 public:
     Prototype(Prefab::Part::Type type, sp::Vector2d position, double rotation, sp::Vector2f size);
@@ -16,13 +16,13 @@ public:
     
     virtual void destroyHandles()
     {
-        for(SceneNode* child : getChildren())
+        for(Node* child : getChildren())
             delete child;
     }
     
-    virtual sp::P<sp::SceneNode> getHandle(sp::Vector2d position)
+    virtual sp::P<sp::Node> getHandle(sp::Vector2d position)
     {
-        for(SceneNode* child : getChildren())
+        for(Node* child : getChildren())
         {
             if (sp::length(child->getGlobalPosition2D() - position) < 0.5)
             {

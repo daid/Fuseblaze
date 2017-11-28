@@ -108,16 +108,16 @@ void Prefab::save(sp::string filename)
     file << json.dump();
 }
 
-std::map<sp::string, sp::P<sp::SceneNode>> Prefab::spawn(sp::Vector2d position, double rotation)
+std::map<sp::string, sp::P<sp::Node>> Prefab::spawn(sp::Vector2d position, double rotation)
 {
-    std::map<sp::string, sp::P<sp::SceneNode>> id_map;
+    std::map<sp::string, sp::P<sp::Node>> id_map;
     sp::Quaterniond q = sp::Quaterniond::fromAngle(rotation);
     for(Part& part : parts)
     {
         sp::Vector2d p = position + q * part.position;
         double r = rotation + part.rotation;
         
-        sp::P<sp::SceneNode> node;
+        sp::P<sp::Node> node;
         switch(part.type)
         {
         case Part::Type::Floor:
@@ -181,9 +181,9 @@ void Prefab::updateFromPrototypes()
 {
     parts.clear();
     
-    for(sp::SceneNode* node : scene->getRoot()->getChildren())
+    for(sp::Node* node : scene->getRoot()->getChildren())
     {
-        sp::P<Prototype> prototype = sp::P<sp::SceneNode>(node);
+        sp::P<Prototype> prototype = sp::P<sp::Node>(node);
         if (!prototype)
             continue;
 

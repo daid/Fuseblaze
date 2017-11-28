@@ -3,7 +3,7 @@
 
 #include <sp2/scene/node.h>
 
-class BloodDecal : public sp::SceneNode
+class BloodDecal : public sp::Node
 {
 public:
     BloodDecal(sp::Vector2d position);

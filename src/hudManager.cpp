@@ -8,8 +8,8 @@
 #include <sp2/graphics/gui/widget/label.h>
 #include <sp2/graphics/gui/widget/progressbar.h>
 
-HudManager::HudManager(sp::P<sp::SceneNode> root)
-: sp::SceneNode(root)
+HudManager::HudManager(sp::P<sp::Node> root)
+: sp::Node(root)
 {
     huds[0] = sp::gui::Loader::load("gui/hud.gui", "HUD", gui_layer->getRoot());
     huds[1] = sp::gui::Loader::load("gui/hud.gui", "HUD", gui_layer->getRoot());

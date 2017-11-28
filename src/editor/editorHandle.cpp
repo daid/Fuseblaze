@@ -3,8 +3,8 @@
 
 #include <sp2/graphics/meshdata.h>
 
-EditorHandle::EditorHandle(sp::P<sp::SceneNode> parent, sp::Vector2d offset, Type type)
-: sp::SceneNode(parent), type(type)
+EditorHandle::EditorHandle(sp::P<sp::Node> parent, sp::Vector2d offset, Type type)
+: sp::Node(parent), type(type)
 {
     setPosition(offset);
 

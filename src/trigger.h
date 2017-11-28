@@ -5,7 +5,7 @@
 #include <sp2/scene/node.h>
 #include <sp2/script/callback.h>
 
-class Trigger : public sp::SceneNode
+class Trigger : public sp::Node
 {
 public:
     sp::script::Callback onTriggerEnter;
