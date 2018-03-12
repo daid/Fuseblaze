@@ -27,9 +27,9 @@ void Screamer::onUpdate(float delta)
         updateTargetPlayer();
         if (target_player)
         {
-            charge_normal = sp::normalize(target_player->getGlobalPosition2D() - getGlobalPosition2D());
+            charge_normal = (target_player->getGlobalPosition2D() - getGlobalPosition2D()).normalized();
             
-            double target_rotation = sp::toRotationAngle(charge_normal);
+            double target_rotation = charge_normal.angle();
             setAngularVelocity(getAngularVelocity2D() * 0.5 + sp::angleDifference(getGlobalRotation2D(), target_rotation) * 5.0);
 
             if (sp::angleDifference(getGlobalRotation2D(), target_rotation) < 10.0)

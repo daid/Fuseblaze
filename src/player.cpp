@@ -51,7 +51,7 @@ void Player::onFixedUpdate()
     if (movement_request != sp::Vector2d(0.0, 0.0))
     {
         setLinearVelocity(movement_request * 100.0);
-        target_rotation = sp::toRotationAngle(movement_request);
+        target_rotation = movement_request.angle();
     }
     else
     {

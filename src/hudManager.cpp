@@ -4,24 +4,25 @@
 #include "weapons/weapon.h"
 #include "pickups/pickup.h"
 
-#include <sp2/graphics/gui/guiLoader.h>
+#include <sp2/graphics/gui/loader.h>
 #include <sp2/graphics/gui/widget/label.h>
 #include <sp2/graphics/gui/widget/progressbar.h>
 
 HudManager::HudManager(sp::P<sp::Node> root)
 : sp::Node(root)
 {
-    huds[0] = sp::gui::Loader::load("gui/hud.gui", "HUD", gui_layer->getRoot());
-    huds[1] = sp::gui::Loader::load("gui/hud.gui", "HUD", gui_layer->getRoot());
+    huds[0] = sp::gui::Loader::load("gui/hud.gui", "HUD", gui_scene->getRoot());
+    huds[1] = sp::gui::Loader::load("gui/hud.gui", "HUD", gui_scene->getRoot());
     
-    for(auto widget : huds[1]->children)
+    for(auto child : huds[1]->getChildren())
     {
-        if (widget->layout.alignment == sp::gui::Widget::Alignment::BottomLeft)
-            widget->layout.alignment = sp::gui::Widget::Alignment::BottomRight;
-        if (widget->layout.alignment == sp::gui::Widget::Alignment::Left)
-            widget->layout.alignment = sp::gui::Widget::Alignment::Right;
-        if (widget->layout.alignment == sp::gui::Widget::Alignment::TopLeft)
-            widget->layout.alignment = sp::gui::Widget::Alignment::TopRight;
+        sp::P<sp::gui::Widget> widget = sp::P<sp::Node>(child);
+        if (widget->layout.alignment == sp::Alignment::BottomLeft)
+            widget->layout.alignment = sp::Alignment::BottomRight;
+        if (widget->layout.alignment == sp::Alignment::Left)
+            widget->layout.alignment = sp::Alignment::Right;
+        if (widget->layout.alignment == sp::Alignment::TopLeft)
+            widget->layout.alignment = sp::Alignment::TopRight;
     }
 }
 
@@ -60,8 +61,8 @@ void HudManager::update(Player* player, sp::P<sp::gui::Widget> hud)
     {
         if (player->touching_pickup)
         {
-            label->layout.alignment = sp::gui::Widget::Alignment::TopLeft;
-            label->layout.position = gui_layer->screenToVirtualPosition(camera->worldToScreen(player->getGlobalPosition2D()));
+            label->layout.alignment = sp::Alignment::TopLeft;
+            //TODO:label->layout.position = gui_layer->screenToVirtualPosition(camera->worldToScreen(player->getGlobalPosition2D()));
             label->setLabel(player->touching_pickup->name);
             label->show();
         }else{

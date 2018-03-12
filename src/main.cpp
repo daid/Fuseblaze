@@ -7,10 +7,9 @@
 #include <sp2/graphics/scene/basicnoderenderpass.h>
 #include <sp2/graphics/scene/collisionrenderpass.h>
 #include <sp2/graphics/meshdata.h>
-#include <sp2/graphics/spriteManager.h>
 #include <sp2/graphics/opengl.h>
 #include <sp2/scene/scene.h>
-#include <sp2/scene/cameraNode.h>
+#include <sp2/scene/camera.h>
 #include <sp2/collision/2d/box.h>
 #include <sp2/collision/2d/circle.h>
 
@@ -33,8 +32,8 @@
 #include "editor/prototype.h"
 
 sp::P<sp::Scene> scene;
-sp::P<sp::gui::GraphicsLayer> gui_layer;
-sp::P<sp::CameraNode> camera;
+sp::P<sp::gui::Scene> gui_scene;
+sp::P<sp::Camera> camera;
 sp::P<sp::SceneGraphicsLayer> scene_layer;
 
 class Crate : public sp::Node
@@ -57,17 +56,17 @@ public:
     }
 };
 
-class CameraController : public sp::CameraNode
+class CameraController : public sp::Camera
 {
 public:
     CameraController(sp::P<sp::Node> parent)
-    : sp::CameraNode(parent)
+    : sp::Camera(parent)
     {
         setOrtographic(25.0);
         setRotation(-90);
     }
 
-    virtual void onUpdate(float delta)
+    virtual void onUpdate(float delta) override
     {
         sp::Vector2d position;
         int player_count = 0;
@@ -108,10 +107,10 @@ int main(int argc, char** argv)
     PlayerKeys::init();
     WeaponInfo::init();
     
-    sp::SpriteManager::create("aim_laser", "weapons/aim_laser.png", sp::Vector2f(5, 15));
-    sp::SpriteManager::create("effect_ring", "effect/ring.png", sp::Vector2f(1, 1));
-    sp::SpriteManager::create("weapon_trace", "weapons/trace.png", sp::Vector2f(1, 0.1));
-    sp::SpriteManager::create("blood", "effect/blood.png", sp::Vector2f(0.5, 0.5));
+    //TODO:sp::SpriteManager::create("aim_laser", "weapons/aim_laser.png", sp::Vector2f(5, 15));
+    //TODO:sp::SpriteManager::create("effect_ring", "effect/ring.png", sp::Vector2f(1, 1));
+    //TODO:sp::SpriteManager::create("weapon_trace", "weapons/trace.png", sp::Vector2f(1, 0.1));
+    //TODO:sp::SpriteManager::create("blood", "effect/blood.png", sp::Vector2f(0.5, 0.5));
     
     {
         scene = new sp::Scene("main_scene");
@@ -119,9 +118,7 @@ int main(int argc, char** argv)
     
     sp::P<ShadowRenderPass> shadow_pass;
     {
-        gui_layer = new sp::gui::GraphicsLayer(100);
-        gui_layer->setMinimalVirtualSize(sf::Vector2f(1280, 800));
-        gui_layer->setMaximumVirtualSize(sf::Vector2f(1280, 80000));
+        gui_scene = new sp::gui::Scene(sp::Vector2d(1280, 800), sp::gui::Scene::Direction::Horizontal);
 
         camera = new CameraController(scene->getRoot());
 
@@ -129,7 +126,7 @@ int main(int argc, char** argv)
         shadow_pass = new ShadowRenderPass("window", scene, camera);
         scene_layer->addRenderPass(shadow_pass);
 #ifdef DEBUG
-        //scene_layer->addRenderPass(new sp::CollisionRenderPass("window", scene, camera));
+        scene_layer->addRenderPass(new sp::CollisionRenderPass("window", scene, camera));
 #endif
     }
     
@@ -138,7 +135,7 @@ int main(int argc, char** argv)
     }
     if (0)
     {
-        new Editor(gui_layer->getRoot(), "prefab/special/start");
+        new Editor(gui_scene->getRoot(), "prefab/special/start");
     }
     else
     {

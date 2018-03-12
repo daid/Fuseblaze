@@ -4,7 +4,7 @@
 
 Medkit::Medkit()
 {
-    render_data.color = sf::Color::Red;
+    render_data.color = sp::Color(1,0,0);
     setRotation(45);
     
     name = "Medkit";

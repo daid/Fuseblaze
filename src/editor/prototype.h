@@ -24,7 +24,7 @@ public:
     {
         for(Node* child : getChildren())
         {
-            if (sp::length(child->getGlobalPosition2D() - position) < 0.5)
+            if ((child->getGlobalPosition2D() - position).length() < 0.5)
             {
                 return child;
             }

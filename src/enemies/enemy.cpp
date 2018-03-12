@@ -39,16 +39,16 @@ void Enemy::onUpdate(float delta)
     if (last_seen_player)
     {
         sp::Vector2d diff = last_seen_player_position - getGlobalPosition2D();
-        sp::Vector2d normal = sp::normalize(diff);
+        sp::Vector2d normal = diff.normalized();
         
-        if (sp::length(diff) < 1.0)
+        if (diff.length() < 1.0)
         {
             last_seen_player = nullptr;
         }else{
             sp::Vector2d velocity = getLinearVelocity2D() + normal * double(delta) * movement_speed;
             setLinearVelocity(velocity);
             
-            double target_rotation = sp::toRotationAngle(diff);
+            double target_rotation = diff.angle();
             setAngularVelocity(getAngularVelocity2D() * 0.5 + sp::angleDifference(getGlobalRotation2D(), target_rotation) * 5.0);
         }
     }
@@ -82,17 +82,17 @@ void Enemy::updateTargetPlayer()
     
     double target_distance = 0.0;
     if (target_player)
-        target_distance = sp::length(position - target_player->getGlobalPosition2D());
+        target_distance = (position - target_player->getGlobalPosition2D()).length();
     
     for(Player* player : Player::players)
     {
         sp::Vector2d player_position = player->getGlobalPosition2D();
-        double distance = sp::length(position - player_position);
+        double distance = (position - player_position).length();
         if (distance > vision_range)
             continue;
 
         bool visible = true;
-        ::scene->queryCollisionAny(position, player_position, [&visible](sp::P<sp::Node> object, sp::Vector2d hit_location, sp::Vector2d hit_normal)
+        ::scene->queryCollisionAny(sp::Ray2d(position, player_position), [&visible](sp::P<sp::Node> object, sp::Vector2d hit_location, sp::Vector2d hit_normal)
         {
             if (sp::P<Wall>(object))
             {

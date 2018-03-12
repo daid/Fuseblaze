@@ -212,11 +212,11 @@ std::pair<double, double> Prefab::projectPolygon(sp::Vector2d position, double r
 {
     sp::Quaterniond q = sp::Quaterniond::fromAngle(rotation);
     
-	double p_min = sp::dot(normal, position + q * convex_hull[0]);
+	double p_min = normal.dot(position + q * convex_hull[0]);
 	double p_max = p_min;
 	for(sp::Vector2d p : convex_hull)
 	{
-		double projection = sp::dot(normal, position + q * p);
+		double projection = normal.dot(position + q * p);
 		p_min = std::min(p_min, projection);
 		p_max = std::max(p_max, projection);
     }
@@ -230,7 +230,7 @@ bool Prefab::collision(sp::Vector2d position, double rotation, Prefab& other, sp
 	{
         sp::Vector2d p0 = position + q * convex_hull[(n + convex_hull.size() - 1) % convex_hull.size()];
         sp::Vector2d p1 = position + q * convex_hull[n];
-        sp::Vector2d normal = sp::normalize(p1 - p0);
+        sp::Vector2d normal = (p1 - p0).normalized();
         normal = sp::Vector2d(normal.y, -normal.x);
 		auto a_min_max = projectPolygon(position, rotation, normal);
 		auto b_min_max = other.projectPolygon(other_position, other_rotation, normal);
@@ -245,7 +245,7 @@ bool Prefab::collision(sp::Vector2d position, double rotation, Prefab& other, sp
 	{
         sp::Vector2d p0 = other_position + q * other.convex_hull[(n + other.convex_hull.size() - 1) % other.convex_hull.size()];
         sp::Vector2d p1 = other_position + q * other.convex_hull[n];
-        sp::Vector2d normal = sp::normalize(p1 - p0);
+        sp::Vector2d normal = (p1 - p0).normalized();
         normal = sp::Vector2d(normal.y, -normal.x);
 		auto a_min_max = projectPolygon(position, rotation, normal);
 		auto b_min_max = other.projectPolygon(other_position, other_rotation, normal);
@@ -279,14 +279,14 @@ void Prefab::updateConvexHull()
     // Build lower hull
 	for (int i=0; i<int(points.size()); i++)
 	{
-		while(k >= 2 && sp::cross(convex_hull[k-1] - convex_hull[k-2], points[i] - convex_hull[k-2]) <= 0)
+		while(k >= 2 && (convex_hull[k-1] - convex_hull[k-2]).cross(points[i] - convex_hull[k-2]) <= 0)
             k--;
 		convex_hull[k++] = points[i];
 	}
 
 	// Build upper hull
 	for (int i = int(points.size())-2, t = k+1; i >= 0; i--) {
-		while(k >= t && sp::cross(convex_hull[k-1] - convex_hull[k-2], points[i] - convex_hull[k-2]) <= 0)
+		while(k >= t && (convex_hull[k-1] - convex_hull[k-2]).cross(points[i] - convex_hull[k-2]) <= 0)
             k--;
 		convex_hull[k++] = points[i];
 	}

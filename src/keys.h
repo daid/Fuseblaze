@@ -3,7 +3,7 @@
 
 #include <sp2/io/keybinding.h>
 
-class PlayerKeys : sf::NonCopyable
+class PlayerKeys : sp::NonCopyable
 {
 public:
     static void init();

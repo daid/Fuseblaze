@@ -10,12 +10,12 @@ EditorHandle::EditorHandle(sp::P<sp::Node> parent, sp::Vector2d offset, Type typ
 
     render_data.type = sp::RenderData::Type::Normal;
     render_data.shader = sp::Shader::get("shader/color.shader");
-    render_data.color = sf::Color::Blue;
+    render_data.color = sp::Color(0,0,1);
     render_data.order = 100;
 
     render_data.mesh = sp::MeshData::createQuad(sp::Vector2f(1, 1));
     
-    rotation_offset = sp::toRotationAngle(offset);
+    rotation_offset = offset.angle();
 }
 
 void EditorHandle::dragTo(sp::Vector2d position)
@@ -26,14 +26,14 @@ void EditorHandle::dragTo(sp::Vector2d position)
     double step_size = 1.0;
     if (prototype->type == Prefab::Part::Type::PrefabConnection)
         step_size = 3.0;
-    point = sp::Vector2d(sf::Vector2i(sp::abs(point * 2.0) / step_size + sp::Vector2d(0.5, 0.5))) * step_size - sp::Vector2d(1.0, 1.0);
+    point = sp::Vector2d(sp::Vector2i(sp::Vector2d(std::abs(point.x * 2.0), std::abs(point.y * 2.0)) / step_size + sp::Vector2d(0.5, 0.5))) * step_size - sp::Vector2d(1.0, 1.0);
     point.x = std::max(point.x, 1.0);
     point.y = std::max(point.y, 1.0);
     switch(type)
     {
     case Type::Rotation:
         {
-            double angle = sp::toRotationAngle(position - prototype->getGlobalPosition2D()) - rotation_offset;
+            double angle = (position - prototype->getGlobalPosition2D()).angle() - rotation_offset;
             angle = int(angle / 15) * 15;
             prototype->setRotation(angle);
         }

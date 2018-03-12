@@ -12,7 +12,6 @@ Pickup::Pickup()
     render_data.shader = sp::Shader::get("shader/color.shader");
     render_data.mesh = sp::MeshData::createQuad(sp::Vector2f(0.3, 0.3));
     render_data.order = -2;
-    render_data.color = sf::Color::White;
 
     sp::collision::Circle2D circle(0.5);
     circle.type = sp::collision::Shape::Type::Sensor;

@@ -1,6 +1,7 @@
 #include "weaponInfo.h"
 #include <sp2/io/keyValueTreeLoader.h>
 #include <sp2/random.h>
+#include <sp2/stringutil/convert.h>
 #include <unordered_map>
 
 std::unordered_map<sp::string, WeaponInfo> weapons;
@@ -14,17 +15,17 @@ void WeaponInfo::init()
         info.name = data.first;
         info.auto_fire = data.second["auto_fire"] == "true";
         
-        info.ammo_per_clip = data.second["ammo_per_clip"].toInt();
-        info.cooldown_delay = data.second["cooldown_delay"].toFloat();
-        info.reload_delay = data.second["reload_delay"].toFloat();
+        info.ammo_per_clip = sp::stringutil::convert::toInt(data.second["ammo_per_clip"]);
+        info.cooldown_delay = sp::stringutil::convert::toFloat(data.second["cooldown_delay"]);
+        info.reload_delay = sp::stringutil::convert::toFloat(data.second["reload_delay"]);
 
-        info.projectile_count = data.second["projectile_count"].toInt();
-        info.projectile_spread = data.second["projectile_spread"].toFloat();
-        info.trace_shot = data.second["trace_shot"] == "true";
-        info.pass_trough_enemies = data.second["pass_trough_enemies"] == "true";
+        info.projectile_count = sp::stringutil::convert::toInt(data.second["projectile_count"]);
+        info.projectile_spread = sp::stringutil::convert::toFloat(data.second["projectile_spread"]);
+        info.trace_shot = sp::stringutil::convert::toBool(data.second["trace_shot"]);
+        info.pass_trough_enemies = sp::stringutil::convert::toBool(data.second["pass_trough_enemies"]);
         
-        info.damage_per_hit = data.second["damage_per_hit"].toFloat();
-        info.range = data.second["range"].toFloat();
+        info.damage_per_hit = sp::stringutil::convert::toFloat(data.second["damage_per_hit"]);
+        info.range = sp::stringutil::convert::toFloat(data.second["range"]);
     
         info.auto_aim = data.second["auto_aim"] == "true";
         

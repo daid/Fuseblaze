@@ -4,7 +4,7 @@
 #include "../main.h"
 
 #include <SFML/Window/Keyboard.hpp>
-#include <sp2/graphics/gui/guiLoader.h>
+#include <sp2/graphics/gui/loader.h>
 #include <sp2/engine.h>
 
 Editor::Editor(sp::P<sp::gui::Widget> parent, sp::string prefab_name)
@@ -78,7 +78,7 @@ Editor::Editor(sp::P<sp::gui::Widget> parent, sp::string prefab_name)
     prefab.load(prefab_name);
     prefab.createPrototypes();
 }
-
+/*
 void Editor::render(sf::RenderTarget& window)
 {
     Widget::render(window);
@@ -88,8 +88,8 @@ void Editor::render(sf::RenderTarget& window)
         delete *selection;
     }
 }
-
-bool Editor::onPointerDown(sp::io::Pointer::Button button, sp::Vector2f position, int id)
+*/
+bool Editor::onPointerDown(sp::io::Pointer::Button button, sp::Vector2d position, int id)
 {
     sp::Vector2d world_position = toWorld(position);
 
@@ -102,7 +102,7 @@ bool Editor::onPointerDown(sp::io::Pointer::Button button, sp::Vector2f position
     }
     selection = nullptr;
     
-    scene->queryCollision(world_position, [this](sp::P<sp::Node> node)
+    getScene()->queryCollision(world_position, [this](sp::P<sp::Node> node)
     {
         sp::P<Prototype> prototype = node;
         if (prototype && prototype->type == selection_layer)
@@ -120,7 +120,7 @@ bool Editor::onPointerDown(sp::io::Pointer::Button button, sp::Vector2f position
     return true;
 }
 
-void Editor::onPointerDrag(sf::Vector2f position, int id)
+void Editor::onPointerDrag(sp::Vector2d position, int id)
 {
     sp::Vector2d world_position = toWorld(position);
     
@@ -138,7 +138,7 @@ void Editor::onPointerDrag(sf::Vector2f position, int id)
     pointer_position = position;
 }
 
-void Editor::onPointerUp(sf::Vector2f position, int id)
+void Editor::onPointerUp(sp::Vector2d position, int id)
 {
 }
 
@@ -154,7 +154,7 @@ void Editor::loadPrefab(sp::string filename)
     
 }
 
-sp::Vector2d Editor::toWorld(sp::Vector2f position)
+sp::Vector2d Editor::toWorld(sp::Vector2d position)
 {
-    return camera->screenToWorld(gui_layer->virtualPositionToScreen(position));
+    //return camera->screenToWorld(gui_scene->virtualPositionToScreen(position));
 }

@@ -6,7 +6,7 @@
 class ShadowRenderPass : public sp::RenderPass
 {
 public:
-    ShadowRenderPass(sp::string target_layer, sp::P<sp::Scene> scene, sp::P<sp::CameraNode> camera)
+    ShadowRenderPass(sp::string target_layer, sp::P<sp::Scene> scene, sp::P<sp::Camera> camera)
     : sp::RenderPass(target_layer)
     {
         single_scene = scene;
@@ -43,7 +43,7 @@ public:
                 glStencilFunc(GL_ALWAYS, 1 << n, 1 << n);
                 glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
 
-                sp::Shader::get("shader/wallShadow.shader")->setUniform("light_source_position", sp::Vector2f(light_source->getGlobalPosition2D()));
+                sp::Shader::get("shader/wallShadow.shader")->setUniformTmp("light_source_position", sp::Vector2f(light_source->getGlobalPosition2D()));
                 shadow_queue.render(camera->getProjectionMatrix(), camera->getGlobalTransform().inverse(), target);
                 player_shadow_queue[n].render(camera->getProjectionMatrix(), camera->getGlobalTransform().inverse(), target);
                 
@@ -63,7 +63,7 @@ public:
                 render_data.type = sp::RenderData::Type::Normal;
                 render_data.shader = sp::Shader::get("shader/overlay.shader");
                 render_data.mesh = overlay_quad;
-                render_data.color = sp::Color::Black;
+                render_data.color = sp::Color(0,0,0);
                 queue2.add(sp::Matrix4x4d::identity(), render_data);
 
                 //queue2.render(camera->getProjectionMatrix(), camera->getGlobalTransform().inverse(), target);
@@ -85,7 +85,7 @@ public:
                 render_data.type = sp::RenderData::Type::Normal;
                 render_data.shader = node->render_data.shader;
                 render_data.mesh = node->render_data.mesh;
-                render_data.color = sp::Color::White;
+                render_data.color = sp::Color(1,1,1);
                 if (node->render_data.order == 0)
                     shadow_queue.add(node->getGlobalTransform(), render_data);
                 else if (node->render_data.order < 3)
@@ -109,7 +109,7 @@ public:
     sp::PList<sp::Node> light_sources;
 private:
     sp::P<sp::Scene> single_scene;
-    sp::P<sp::CameraNode> specific_camera;
+    sp::P<sp::Camera> specific_camera;
     std::shared_ptr<sp::MeshData> overlay_quad;
     
     sp::RenderQueue pre_shadow_queue;

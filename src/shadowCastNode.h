@@ -27,7 +27,8 @@ public:
         if (size.y > 5.0)
             points.emplace_back(-size.x * 0.5f,  0);
         
-        std::vector<sp::MeshData::Vertex> vertices;
+        sp::MeshData::Vertices vertices;
+        sp::MeshData::Indices indices;
         for(unsigned int n=0; n<points.size(); n++)
         {
             sp::Vector2f p0 = points[n];
@@ -39,8 +40,15 @@ public:
             vertices.emplace_back(sp::Vector3f(p0.x, p0.y, max_shadow_distance));
             vertices.emplace_back(sp::Vector3f(p1.x, p1.y, min_shadow_distance));
             vertices.emplace_back(sp::Vector3f(p1.x, p1.y, max_shadow_distance));
+            
+            indices.push_back(indices.size());
+            indices.push_back(indices.size());
+            indices.push_back(indices.size());
+            indices.push_back(indices.size());
+            indices.push_back(indices.size());
+            indices.push_back(indices.size());
         }
-        render_data.mesh = std::make_shared<sp::MeshData>(vertices);
+        render_data.mesh = std::make_shared<sp::MeshData>(std::move(vertices), std::move(indices));
         render_data.shader = sp::Shader::get("shader/wallShadow.shader");
     }
 
@@ -58,7 +66,8 @@ public:
             points.emplace_back(sin(a) * radius, cos(a) * radius);
         }
 
-        std::vector<sp::MeshData::Vertex> vertices;
+        sp::MeshData::Vertices vertices;
+        sp::MeshData::Indices indices;
         for(unsigned int n=0; n<points.size() - 1; n++)
         {
             sp::Vector2f p0 = points[n];
@@ -70,8 +79,15 @@ public:
             vertices.emplace_back(sp::Vector3f(p0.x, p0.y, max_shadow_distance));
             vertices.emplace_back(sp::Vector3f(p1.x, p1.y, min_shadow_distance));
             vertices.emplace_back(sp::Vector3f(p1.x, p1.y, max_shadow_distance));
+
+            indices.push_back(indices.size());
+            indices.push_back(indices.size());
+            indices.push_back(indices.size());
+            indices.push_back(indices.size());
+            indices.push_back(indices.size());
+            indices.push_back(indices.size());
         }
-        render_data.mesh = std::make_shared<sp::MeshData>(vertices);
+        render_data.mesh = std::make_shared<sp::MeshData>(std::move(vertices), std::move(indices));
         render_data.shader = sp::Shader::get("shader/wallShadow.shader");
         render_data.order = index + 1;
     }
@@ -91,7 +107,8 @@ public:
             points.emplace_back(sin(a) * radius, cos(a) * radius);
         }
 
-        std::vector<sp::MeshData::Vertex> vertices;
+        sp::MeshData::Vertices vertices;
+        sp::MeshData::Indices indices;
         for(unsigned int n=0; n<points.size() - 1; n++)
         {
             sp::Vector2f p0 = points[n];
@@ -103,8 +120,15 @@ public:
             vertices.emplace_back(sp::Vector3f(p0.x, p0.y, max_shadow_distance));
             vertices.emplace_back(sp::Vector3f(p1.x, p1.y, min_shadow_distance));
             vertices.emplace_back(sp::Vector3f(p1.x, p1.y, max_shadow_distance));
+
+            indices.push_back(indices.size());
+            indices.push_back(indices.size());
+            indices.push_back(indices.size());
+            indices.push_back(indices.size());
+            indices.push_back(indices.size());
+            indices.push_back(indices.size());
         }
-        render_data.mesh = std::make_shared<sp::MeshData>(vertices);
+        render_data.mesh = std::make_shared<sp::MeshData>(std::move(vertices), std::move(indices));
         render_data.shader = sp::Shader::get("shader/wallShadow.shader");
         render_data.order = index + 1;
     }
