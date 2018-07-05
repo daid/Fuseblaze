@@ -6,7 +6,7 @@
 #include "../blood.h"
 #include <sp2/scene/scene.h>
 #include <sp2/random.h>
-#include <sp2/graphics/meshData.h>
+#include <sp2/graphics/meshdata.h>
 #include <sp2/graphics/textureManager.h>
 
 Weapon::Weapon(WeaponInfo& info, sp::P<Player> player)

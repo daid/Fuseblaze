@@ -1,7 +1,7 @@
 #include "effect.h"
 #include "main.h"
 #include <sp2/tween.h>
-#include <sp2/graphics/meshData.h>
+#include <sp2/graphics/meshdata.h>
 #include <sp2/graphics/textureManager.h>
 
 Effect::Effect(sp::Vector2d position, float scale)

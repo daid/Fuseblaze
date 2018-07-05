@@ -1,7 +1,7 @@
 #include "weaponFireTraceEffect.h"
 #include "../main.h"
 #include <sp2/tween.h>
-#include <sp2/graphics/meshData.h>
+#include <sp2/graphics/meshdata.h>
 #include <sp2/graphics/textureManager.h>
 
 WeaponFireTraceEffect::WeaponFireTraceEffect(sp::Vector2d start_position, sp::Vector2d end_position)
