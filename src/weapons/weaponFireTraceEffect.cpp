@@ -11,7 +11,7 @@ WeaponFireTraceEffect::WeaponFireTraceEffect(sp::Vector2d start_position, sp::Ve
     setRotation((end_position - start_position).angle());
     
     render_data.mesh = sp::MeshData::createQuad(sp::Vector2f(1, 0.1));
-    render_data.texture = sp::textureManager.get("weapons/trace.png");
+    render_data.texture = sp::texture_manager.get("weapons/trace.png");
     render_data.shader = sp::Shader::get("internal:basic.shader");
     render_data.type = sp::RenderData::Type::Additive;
     render_data.order = 20; //render effects on top of everything else

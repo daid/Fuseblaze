@@ -10,7 +10,7 @@ Effect::Effect(sp::Vector2d position, float scale)
     setPosition(position);
     
     render_data.mesh = sp::MeshData::createQuad(sp::Vector2f(1, 1));
-    render_data.texture = sp::textureManager.get("effect/ring.png");
+    render_data.texture = sp::texture_manager.get("effect/ring.png");
     render_data.shader = sp::Shader::get("internal:basic.shader");
     render_data.type = sp::RenderData::Type::Additive;
     render_data.order = 20; //render effects on top of everything else

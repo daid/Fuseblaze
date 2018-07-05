@@ -15,7 +15,7 @@ Weapon::Weapon(WeaponInfo& info, sp::P<Player> player)
     //Aiming laser
     aiming_node = new sp::Node(this);
     aiming_node->render_data.mesh = sp::MeshData::createQuad(sp::Vector2f(5, 15));
-    aiming_node->render_data.texture = sp::textureManager.get("weapons/aim_laser.png");
+    aiming_node->render_data.texture = sp::texture_manager.get("weapons/aim_laser.png");
     aiming_node->render_data.shader = sp::Shader::get("internal:basic.shader");
     aiming_node->render_data.type = sp::RenderData::Type::Additive;
     aiming_node->render_data.color = sp::Color(1,0,0);
