@@ -10,7 +10,7 @@ Prototype::Prototype(Prefab::Part::Type type, sp::Vector2d position, double rota
 : sp::Node(::scene->getRoot()), type(type)
 {
     render_data.type = sp::RenderData::Type::Normal;
-    render_data.shader = sp::Shader::get("shader/color.shader");
+    render_data.shader = sp::Shader::get("internal:color.shader");
     setPosition(position);
     setRotation(rotation);
 

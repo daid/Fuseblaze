@@ -9,7 +9,7 @@ EditorHandle::EditorHandle(sp::P<sp::Node> parent, sp::Vector2d offset, Type typ
     setPosition(offset);
 
     render_data.type = sp::RenderData::Type::Normal;
-    render_data.shader = sp::Shader::get("shader/color.shader");
+    render_data.shader = sp::Shader::get("internal:color.shader");
     render_data.color = sp::Color(0,0,1);
     render_data.order = 100;
 

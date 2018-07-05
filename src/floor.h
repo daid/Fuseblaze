@@ -11,7 +11,7 @@ public:
     : sp::Node(::scene->getRoot())
     {
         render_data.type = sp::RenderData::Type::Normal;
-        render_data.shader = sp::Shader::get("shader/color.shader");
+        render_data.shader = sp::Shader::get("internal:color.shader");
         render_data.mesh = sp::MeshData::createQuad(size);
         render_data.color = color;
         render_data.order = -10;//Draw floors at bottom most layer, below anything else.

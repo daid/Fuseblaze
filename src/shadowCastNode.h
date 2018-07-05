@@ -33,20 +33,19 @@ public:
         {
             sp::Vector2f p0 = points[n];
             sp::Vector2f p1 = points[(n + 1) % points.size()];
+            int i = vertices.size();
+
             vertices.emplace_back(sp::Vector3f(p0.x, p0.y, min_shadow_distance));
             vertices.emplace_back(sp::Vector3f(p1.x, p1.y, min_shadow_distance));
             vertices.emplace_back(sp::Vector3f(p0.x, p0.y, max_shadow_distance));
-
-            vertices.emplace_back(sp::Vector3f(p0.x, p0.y, max_shadow_distance));
-            vertices.emplace_back(sp::Vector3f(p1.x, p1.y, min_shadow_distance));
             vertices.emplace_back(sp::Vector3f(p1.x, p1.y, max_shadow_distance));
-            
-            indices.push_back(indices.size());
-            indices.push_back(indices.size());
-            indices.push_back(indices.size());
-            indices.push_back(indices.size());
-            indices.push_back(indices.size());
-            indices.push_back(indices.size());
+
+            indices.push_back(i + 0);
+            indices.push_back(i + 1);
+            indices.push_back(i + 2);
+            indices.push_back(i + 2);
+            indices.push_back(i + 1);
+            indices.push_back(i + 3);
         }
         render_data.mesh = std::make_shared<sp::MeshData>(std::move(vertices), std::move(indices));
         render_data.shader = sp::Shader::get("shader/wallShadow.shader");
@@ -72,20 +71,19 @@ public:
         {
             sp::Vector2f p0 = points[n];
             sp::Vector2f p1 = points[(n + 1) % points.size()];
+            int i = vertices.size();
+
             vertices.emplace_back(sp::Vector3f(p0.x, p0.y, min_shadow_distance));
             vertices.emplace_back(sp::Vector3f(p1.x, p1.y, min_shadow_distance));
             vertices.emplace_back(sp::Vector3f(p0.x, p0.y, max_shadow_distance));
-
-            vertices.emplace_back(sp::Vector3f(p0.x, p0.y, max_shadow_distance));
-            vertices.emplace_back(sp::Vector3f(p1.x, p1.y, min_shadow_distance));
             vertices.emplace_back(sp::Vector3f(p1.x, p1.y, max_shadow_distance));
 
-            indices.push_back(indices.size());
-            indices.push_back(indices.size());
-            indices.push_back(indices.size());
-            indices.push_back(indices.size());
-            indices.push_back(indices.size());
-            indices.push_back(indices.size());
+            indices.push_back(i + 0);
+            indices.push_back(i + 1);
+            indices.push_back(i + 2);
+            indices.push_back(i + 2);
+            indices.push_back(i + 1);
+            indices.push_back(i + 3);
         }
         render_data.mesh = std::make_shared<sp::MeshData>(std::move(vertices), std::move(indices));
         render_data.shader = sp::Shader::get("shader/wallShadow.shader");
@@ -113,20 +111,20 @@ public:
         {
             sp::Vector2f p0 = points[n];
             sp::Vector2f p1 = points[(n + 1) % points.size()];
+
+            int i = vertices.size();
+
             vertices.emplace_back(sp::Vector3f(p0.x, p0.y, min_shadow_distance));
             vertices.emplace_back(sp::Vector3f(p1.x, p1.y, min_shadow_distance));
             vertices.emplace_back(sp::Vector3f(p0.x, p0.y, max_shadow_distance));
-
-            vertices.emplace_back(sp::Vector3f(p0.x, p0.y, max_shadow_distance));
-            vertices.emplace_back(sp::Vector3f(p1.x, p1.y, min_shadow_distance));
             vertices.emplace_back(sp::Vector3f(p1.x, p1.y, max_shadow_distance));
 
-            indices.push_back(indices.size());
-            indices.push_back(indices.size());
-            indices.push_back(indices.size());
-            indices.push_back(indices.size());
-            indices.push_back(indices.size());
-            indices.push_back(indices.size());
+            indices.push_back(i + 0);
+            indices.push_back(i + 1);
+            indices.push_back(i + 2);
+            indices.push_back(i + 2);
+            indices.push_back(i + 1);
+            indices.push_back(i + 3);
         }
         render_data.mesh = std::make_shared<sp::MeshData>(std::move(vertices), std::move(indices));
         render_data.shader = sp::Shader::get("shader/wallShadow.shader");

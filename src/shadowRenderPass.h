@@ -6,16 +6,24 @@
 class ShadowRenderPass : public sp::RenderPass
 {
 public:
-    ShadowRenderPass(sp::string target_layer, sp::P<sp::Scene> scene, sp::P<sp::Camera> camera)
-    : sp::RenderPass(target_layer)
+    ShadowRenderPass(sp::P<sp::Scene> scene, sp::P<sp::Camera> camera)
+    : sp::RenderPass()
     {
         single_scene = scene;
         specific_camera = camera;
         
-        overlay_quad = sp::MeshData::createQuad(sp::Vector2f(2, 2));
+        sp::RenderData render_data;
+        render_data.type = sp::RenderData::Type::Normal;
+        render_data.shader = sp::Shader::get("shader/overlay.shader");
+        render_data.mesh = sp::MeshData::createQuad(sp::Vector2f(2, 2));
+        render_data.color = sp::Color(0,0,0);
+#ifdef DEBUG
+        render_data.color.a = 0.7;
+#endif        
+        overlay_queue.add(sp::Matrix4x4d::identity(), render_data);
     }
     
-    virtual void render(sf::RenderTarget& target, sp::P<sp::GraphicsLayer> layer, float aspect_ratio)
+    virtual void render(sp::P<sp::GraphicsLayer> layer, float aspect_ratio) override
     {
         if (single_scene->isEnabled() && specific_camera)
         {
@@ -29,7 +37,7 @@ public:
 
             recursiveNodeRender(*scene->getRoot());
 
-            pre_shadow_queue.render(camera->getProjectionMatrix(), camera->getGlobalTransform().inverse(), target);
+            pre_shadow_queue.render(camera->getProjectionMatrix(), camera->getGlobalTransform().inverse());
 
             glClear(GL_STENCIL_BUFFER_BIT);
             glEnable(GL_STENCIL_TEST);
@@ -44,8 +52,8 @@ public:
                 glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
 
                 sp::Shader::get("shader/wallShadow.shader")->setUniformTmp("light_source_position", sp::Vector2f(light_source->getGlobalPosition2D()));
-                shadow_queue.render(camera->getProjectionMatrix(), camera->getGlobalTransform().inverse(), target);
-                player_shadow_queue[n].render(camera->getProjectionMatrix(), camera->getGlobalTransform().inverse(), target);
+                shadow_queue.render(camera->getProjectionMatrix(), camera->getGlobalTransform().inverse());
+                player_shadow_queue[n].render(camera->getProjectionMatrix(), camera->getGlobalTransform().inverse());
                 
                 n++;
             }
@@ -57,21 +65,12 @@ public:
 
             if (light_sources.size() > 0)
             {
-                sp::RenderQueue queue2;
-
-                sp::RenderData render_data;
-                render_data.type = sp::RenderData::Type::Normal;
-                render_data.shader = sp::Shader::get("shader/overlay.shader");
-                render_data.mesh = overlay_quad;
-                render_data.color = sp::Color(0,0,0);
-                queue2.add(sp::Matrix4x4d::identity(), render_data);
-
-                //queue2.render(camera->getProjectionMatrix(), camera->getGlobalTransform().inverse(), target);
+                overlay_queue.render(camera->getProjectionMatrix(), camera->getGlobalTransform().inverse());
             }
 
             glDisable(GL_STENCIL_TEST);
             
-            post_shadow_queue.render(camera->getProjectionMatrix(), camera->getGlobalTransform().inverse(), target);
+            post_shadow_queue.render(camera->getProjectionMatrix(), camera->getGlobalTransform().inverse());
         }
     }
 
@@ -92,7 +91,7 @@ public:
                     player_shadow_queue[node->render_data.order-1].add(node->getGlobalTransform(), render_data);
             }
         }
-        else
+        else if (node->render_data.mesh)
         {
             if (node->render_data.order < 20)
                 pre_shadow_queue.add(node->getGlobalTransform(), node->render_data);
@@ -110,12 +109,13 @@ public:
 private:
     sp::P<sp::Scene> single_scene;
     sp::P<sp::Camera> specific_camera;
-    std::shared_ptr<sp::MeshData> overlay_quad;
     
     sp::RenderQueue pre_shadow_queue;
     sp::RenderQueue shadow_queue;
     sp::RenderQueue player_shadow_queue[2];
     sp::RenderQueue post_shadow_queue;
+    
+    sp::RenderQueue overlay_queue;
 };
 
 #endif//SHADOW_RENDER_PASS_H

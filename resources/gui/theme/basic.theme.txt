@@ -1,20 +1,19 @@
 {
-    forground.color: #FFFFFF
+    color: #FFFFFF
     font: gui/theme/basic/sansation.ttf
     text.size: 30
 
-    [button] {
-        background.image: gui/theme/basic/background.png
-        forground.color.disabled: #808080
-        forground.color.hovered: #808080
+    [button.background] {
+        image: gui/theme/basic/background.png
+    }
+    [button.forground] {
+        color.disabled: #808080
+        color.hovered: #808080
     }
     [panel] {
         background.image: gui/theme/basic/background.png
     }
     [label] {
-        [pickup_label] {
-            text.size: 20
-        }
     }
     [slider] {
         background.image: gui/theme/basic/slider_background.png
@@ -22,15 +21,16 @@
         forground.color.disabled: #808080
         forground.color.hovered: #808080
     }
-    [progressbar] {
-        background.image: gui/theme/basic/progressbar_background.png
-        forground.image: gui/theme/basic/progressbar_fill.png
-        
+    [progressbar.background] {
+        image: gui/theme/basic/progressbar_background.png
+    }
+    [progressbar.forground] {
+        image: gui/theme/basic/progressbar_fill.png
         [progressbar_ammo] {
-            forground.color: #808080
+            color: #808080
         }
         [progressbar_health] {
-            forground.color: #EE2020
+            color: #EE2020
         }
     }
 }

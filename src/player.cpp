@@ -7,19 +7,15 @@
 #include "shadowCastNode.h"
 #include <sp2/graphics/meshdata.h>
 #include <sp2/collision/2d/circle.h>
+#include <sp2/graphics/spriteAnimation.h>
 
 sp::PList<Player> Player::players;
 
 Player::Player(int index)
 : sp::Node(::scene->getRoot()), index(index)
 {
-    render_data.type = sp::RenderData::Type::Normal;
-    render_data.shader = sp::Shader::get("shader/color.shader");
-    render_data.mesh = sp::MeshData::createQuad(sp::Vector2f(1, 1));
-    if (index == 0)
-        render_data.color = sp::HsvColor(0, 70, 50);
-    else
-        render_data.color = sp::HsvColor(30, 70, 50);
+    animation = sp::SpriteAnimation::load("player.txt");
+    animation->play("Default");
     
     sp::collision::Circle2D circle(0.5);
     setCollisionShape(circle);
@@ -50,7 +46,7 @@ void Player::onFixedUpdate()
     
     if (movement_request != sp::Vector2d(0.0, 0.0))
     {
-        setLinearVelocity(movement_request * 100.0);
+        setLinearVelocity(movement_request * 20.0);
         target_rotation = movement_request.angle();
     }
     else
@@ -106,7 +102,7 @@ void Player::onCollision(sp::CollisionInfo& info)
     if (pickup)
     {
         touching_pickup = pickup;
-        touching_pickup_remove_delay = 10;
+        touching_pickup_remove_delay = 20;
     }
 }
 

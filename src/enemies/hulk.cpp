@@ -10,7 +10,7 @@ Hulk::Hulk()
     movement_speed = 12.0;
 
     render_data.type = sp::RenderData::Type::Normal;
-    render_data.shader = sp::Shader::get("shader/color.shader");
+    render_data.shader = sp::Shader::get("internal:color.shader");
     render_data.mesh = sp::MeshData::createQuad(sp::Vector2f(3, 3));
     render_data.color = sp::HsvColor(120, 70, 50);
     

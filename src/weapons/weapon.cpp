@@ -48,9 +48,9 @@ void Weapon::onUpdate(float delta)
                     if (std::abs(sp::angleDifference(enemy_angle, 0.0)) < 55)
                     {
                         bool visible = true;
-                        ::scene->queryCollisionAny(sp::Ray2d(getGlobalPosition2D(), enemy->getGlobalPosition2D()), [&visible](sp::P<sp::Node> object, sp::Vector2d hit_location, sp::Vector2d hit_normal)
+                        ::scene->queryCollisionAny(sp::Ray2d(getGlobalPosition2D(), enemy->getGlobalPosition2D()), [&visible, &target](sp::P<sp::Node> object, sp::Vector2d hit_location, sp::Vector2d hit_normal)
                         {
-                            if (sp::P<Wall>(object))
+                            if (sp::P<Wall>(object) || (object->isSolid() && !sp::P<Enemy>(object)))
                             {
                                 visible = false;
                                 return false;
@@ -120,13 +120,6 @@ void Weapon::launchProjectile()
     bool hit = false;
     ::scene->queryCollisionAll(sp::Ray2d(position, end_position), [this, &hit](sp::P<sp::Node> object, sp::Vector2d hit_location, sp::Vector2d hit_normal)
     {
-        if (sp::P<Wall>(object))
-        {
-            new Effect(hit_location, 1.0);
-            new WeaponFireTraceEffect(getGlobalPosition2D(), hit_location);
-            hit = true;
-            return false;
-        }
         sp::P<Enemy> enemy = object;
         if (enemy)
         {
@@ -136,6 +129,13 @@ void Weapon::launchProjectile()
             applyDamage(hit_location, hit_normal, enemy);
             hit = true;
             return info.pass_trough_enemies;
+        }
+        if (sp::P<Wall>(object) || object->isSolid())
+        {
+            new Effect(hit_location, 1.0);
+            new WeaponFireTraceEffect(getGlobalPosition2D(), hit_location);
+            hit = true;
+            return false;
         }
         return true;
     });

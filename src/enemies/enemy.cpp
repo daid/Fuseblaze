@@ -3,6 +3,7 @@
 
 #include <sp2/random.h>
 #include <sp2/collision/2d/circle.h>
+#include <sp2/graphics/spriteAnimation.h>
 
 Enemy::Enemy()
 : sp::Node(::scene->getRoot())
@@ -12,10 +13,11 @@ Enemy::Enemy()
     movement_speed = 17.0;
     attack_cooldown = 0.0;
 
-    render_data.type = sp::RenderData::Type::Normal;
-    render_data.shader = sp::Shader::get("shader/color.shader");
-    render_data.mesh = sp::MeshData::createQuad(sp::Vector2f(1, 1));
-    render_data.color = sp::HsvColor(sp::random(190, 210), 70, 50);
+    animation = sp::SpriteAnimation::load("zombie.txt");
+    if (sp::random(0, 100) < 50)
+        animation->play("Alt");
+    else
+        animation->play("Default");
     
     sp::collision::Circle2D circle(0.5);
     circle.angular_damping = 5;

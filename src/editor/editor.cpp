@@ -78,17 +78,16 @@ Editor::Editor(sp::P<sp::gui::Widget> parent, sp::string prefab_name)
     prefab.load(prefab_name);
     prefab.createPrototypes();
 }
-/*
-void Editor::render(sf::RenderTarget& window)
+
+void Editor::onUpdate(float delta)
 {
-    Widget::render(window);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Delete) && selection)
     {
         LOG(Debug, "DEL");
         delete *selection;
     }
 }
-*/
+
 bool Editor::onPointerDown(sp::io::Pointer::Button button, sp::Vector2d position, int id)
 {
     sp::Vector2d world_position = toWorld(position);
@@ -109,9 +108,9 @@ bool Editor::onPointerDown(sp::io::Pointer::Button button, sp::Vector2d position
         {
             selection = prototype;
             selection->createHandles();
-            getWidgetWithID("COLOR_H")->setAttribute("value", selection->color.hue);
-            getWidgetWithID("COLOR_S")->setAttribute("value", selection->color.saturation);
-            getWidgetWithID("COLOR_V")->setAttribute("value", selection->color.value);
+            getWidgetWithID("COLOR_H")->setAttribute("value", sp::string(selection->color.hue));
+            getWidgetWithID("COLOR_S")->setAttribute("value", sp::string(selection->color.saturation));
+            getWidgetWithID("COLOR_V")->setAttribute("value", sp::string(selection->color.value));
             return false;
         }
         return true;

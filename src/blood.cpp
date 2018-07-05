@@ -11,9 +11,9 @@ BloodDecal::BloodDecal(sp::Vector2d position)
     setPosition(position);
     setRotation(sp::random(0, 360));
     
-    render_data.mesh = sp::MeshData::createQuad(sp::Vector2f(0.5, 0.5));
+    render_data.mesh = sp::MeshData::createQuad(sp::Vector2f(1.0, 1.0));
     render_data.texture = sp::textureManager.get("effect/blood.png");
-    render_data.shader = sp::Shader::get("shader/basic.shader");
+    render_data.shader = sp::Shader::get("internal:basic.shader");
     render_data.type = sp::RenderData::Type::Additive;
     render_data.order = -1; //render blood below walls, enemies and players, but above floors
     
