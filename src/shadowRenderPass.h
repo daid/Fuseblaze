@@ -11,74 +11,78 @@ public:
     {
         single_scene = scene;
         specific_camera = camera;
-        
-        sp::RenderData render_data;
-        render_data.type = sp::RenderData::Type::Normal;
-        render_data.shader = sp::Shader::get("shader/overlay.shader");
-        render_data.mesh = sp::MeshData::createQuad(sp::Vector2f(2, 2));
-        render_data.color = sp::Color(0,0,0);
-#ifdef DEBUG
-        render_data.color.a = 0.7;
-#endif        
-        overlay_queue.add(sp::Matrix4x4d::identity(), render_data);
     }
     
-    virtual void render(sp::P<sp::GraphicsLayer> layer, float aspect_ratio) override
+    virtual void render(sp::RenderQueue& queue) override
     {
         if (single_scene->isEnabled() && specific_camera)
         {
-            camera->setAspectRatio(aspect_ratio);
+            queue.setCamera(camera);
 
-            pre_shadow_queue.clear();
-            shadow_queue.clear();
-            player_shadow_queue[0].clear();
-            player_shadow_queue[1].clear();
-            post_shadow_queue.clear();
+            mode = Mode::PreShadow;
+            recursiveNodeRender(queue, *scene->getRoot());
 
-            recursiveNodeRender(*scene->getRoot());
-
-            pre_shadow_queue.render(camera->getProjectionMatrix(), camera->getGlobalTransform().inverse());
-
-            glClear(GL_STENCIL_BUFFER_BIT);
-            glEnable(GL_STENCIL_TEST);
-            glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
-            glDepthMask(GL_FALSE);
+            queue.add([]()
+            {
+                glClear(GL_STENCIL_BUFFER_BIT);
+                glEnable(GL_STENCIL_TEST);
+                glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+                glDepthMask(GL_FALSE);
+            });
             
             int n = 0;
             for(sp::Node* light_source : light_sources)
             {
-                glStencilMask(1 << n);
-                glStencilFunc(GL_ALWAYS, 1 << n, 1 << n);
-                glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
+                sp::Vector2f pos = sp::Vector2f(light_source->getGlobalPosition2D());
+                
+                queue.add([n, pos]()
+                {
+                    glStencilMask(1 << n);
+                    glStencilFunc(GL_ALWAYS, 1 << n, 1 << n);
+                    glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
+                    sp::Shader::get("shader/wallShadow.shader")->setUniformTmp("light_source_position", pos);
+                });
 
-                sp::Shader::get("shader/wallShadow.shader")->setUniformTmp("light_source_position", sp::Vector2f(light_source->getGlobalPosition2D()));
-                shadow_queue.render(camera->getProjectionMatrix(), camera->getGlobalTransform().inverse());
-                player_shadow_queue[n].render(camera->getProjectionMatrix(), camera->getGlobalTransform().inverse());
+                mode = Mode::Shadow;
+                light_index = n;
+                recursiveNodeRender(queue, *scene->getRoot());
                 
                 n++;
             }
-
-            glStencilFunc(GL_EQUAL, (1 << n) - 1, (1 << n) - 1);
-            glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-            glDepthMask(GL_TRUE);
-            glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+            
+            queue.add([n]()
+            {
+                glStencilFunc(GL_EQUAL, (1 << n) - 1, (1 << n) - 1);
+                glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+                glDepthMask(GL_TRUE);
+                glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+            });
 
             if (light_sources.size() > 0)
             {
-                overlay_queue.render(camera->getProjectionMatrix(), camera->getGlobalTransform().inverse());
+                sp::RenderData render_data;
+                render_data.type = sp::RenderData::Type::Normal;
+                render_data.shader = sp::Shader::get("shader/overlay.shader");
+                render_data.mesh = sp::MeshData::createQuad(sp::Vector2f(2, 2));
+                render_data.color = sp::Color(0,0,0);
+#ifdef DEBUG
+                render_data.color.a = 0.7;
+#endif        
+                queue.add(sp::Matrix4x4d::identity(), render_data);
             }
 
             glDisable(GL_STENCIL_TEST);
             
-            post_shadow_queue.render(camera->getProjectionMatrix(), camera->getGlobalTransform().inverse());
+            mode = Mode::PostShadow;
+            recursiveNodeRender(queue, *scene->getRoot());
         }
     }
-
-    void recursiveNodeRender(sp::Node* node)
+    
+    void recursiveNodeRender(sp::RenderQueue& queue, sp::Node* node)
     {
         if (node->render_data.type == sp::RenderData::Type::None)
         {
-            if (dynamic_cast<ShadowCastNode*>(node))
+            if (mode == Mode::Shadow && dynamic_cast<ShadowCastNode*>(node))
             {
                 sp::RenderData render_data;
                 render_data.type = sp::RenderData::Type::Normal;
@@ -86,22 +90,28 @@ public:
                 render_data.mesh = node->render_data.mesh;
                 render_data.color = sp::Color(1,1,1);
                 if (node->render_data.order == 0)
-                    shadow_queue.add(node->getGlobalTransform(), render_data);
-                else if (node->render_data.order < 3)
-                    player_shadow_queue[node->render_data.order-1].add(node->getGlobalTransform(), render_data);
+                    queue.add(node->getGlobalTransform(), render_data);
+                else if (node->render_data.order - 1 == light_index)
+                    queue.add(node->getGlobalTransform(), render_data);
             }
         }
         else if (node->render_data.mesh)
         {
             if (node->render_data.order < 20)
-                pre_shadow_queue.add(node->getGlobalTransform(), node->render_data);
+            {
+                if (mode == Mode::PreShadow)
+                    queue.add(node->getGlobalTransform(), node->render_data);
+            }
             else
-                post_shadow_queue.add(node->getGlobalTransform(), node->render_data);
+            {
+                if (mode == Mode::PostShadow)
+                    queue.add(node->getGlobalTransform(), node->render_data);
+            }
         }
 
         for(sp::Node* child : node->getChildren())
         {
-            recursiveNodeRender(child);
+            recursiveNodeRender(queue, child);
         }
     }
 
@@ -110,12 +120,13 @@ private:
     sp::P<sp::Scene> single_scene;
     sp::P<sp::Camera> specific_camera;
     
-    sp::RenderQueue pre_shadow_queue;
-    sp::RenderQueue shadow_queue;
-    sp::RenderQueue player_shadow_queue[2];
-    sp::RenderQueue post_shadow_queue;
-    
-    sp::RenderQueue overlay_queue;
+    enum class Mode
+    {
+        PreShadow,
+        Shadow,
+        PostShadow,
+    } mode;
+    int light_index;
 };
 
 #endif//SHADOW_RENDER_PASS_H
