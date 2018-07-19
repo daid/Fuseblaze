@@ -4,7 +4,11 @@
 #include <sp2/graphics/meshdata.h>
 #include <sp2/collision/2d/chains.h>
 
+#ifdef __WIN32
 #include <winsock.h>
+#else
+#include <arpa/inet.h>
+#endif
 
 #include "sectorLoader.h"
 #include "math/triangulate.h"
