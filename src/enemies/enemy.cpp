@@ -13,11 +13,11 @@ Enemy::Enemy()
     movement_speed = 17.0;
     attack_cooldown = 0.0;
 
-    animation = sp::SpriteAnimation::load("zombie.txt");
+    setAnimation(sp::SpriteAnimation::load("zombie.txt"));
     if (sp::random(0, 100) < 50)
-        animation->play("Alt");
+        animationPlay("Alt");
     else
-        animation->play("Default");
+        animationPlay("Default");
     
     sp::collision::Circle2D circle(0.5);
     circle.angular_damping = 5;

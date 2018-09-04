@@ -14,8 +14,8 @@ sp::PList<Player> Player::players;
 Player::Player(int index)
 : sp::Node(::scene->getRoot()), index(index)
 {
-    animation = sp::SpriteAnimation::load("player.txt");
-    animation->play("Default");
+    setAnimation(sp::SpriteAnimation::load("player.txt"));
+    animationPlay("Default");
     
     sp::collision::Circle2D circle(0.5);
     setCollisionShape(circle);
