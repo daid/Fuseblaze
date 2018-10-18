@@ -40,7 +40,8 @@ public:
                     glStencilMask(1 << n);
                     glStencilFunc(GL_ALWAYS, 1 << n, 1 << n);
                     glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
-                    sp::Shader::get("shader/wallShadow.shader")->setUniformTmp("light_source_position", pos);
+                    sp::Shader::get("shader/wallShadow.shader")->bind();
+                    sp::Shader::get("shader/wallShadow.shader")->setUniform("light_source_position", pos);
                 });
 
                 mode = Mode::Shadow;

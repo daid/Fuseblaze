@@ -17,6 +17,8 @@
 #include <sp2/collision/2d/circle.h>
 #include <sp2/random.h>
 
+#include <SFML/Window/Keyboard.hpp>
+
 #include <fstream>
 #include "dynamicSectorLoader.h"
 
@@ -160,7 +162,7 @@ int main(int argc, char** argv)
         shadow_pass = new ShadowRenderPass(scene, camera);
         scene_layer->addRenderPass(shadow_pass);
 #ifdef DEBUG
-        scene_layer->addRenderPass(new sp::CollisionRenderPass(scene, camera));
+        scene_layer->addRenderPass(new sp::CollisionRenderPass(camera));
 #endif
         scene_layer->addRenderPass(new sp::BasicNodeRenderPass(gui_scene->getCamera()));
         window->addLayer(scene_layer);
