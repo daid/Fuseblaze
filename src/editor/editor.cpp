@@ -3,7 +3,7 @@
 #include "prototype.h"
 #include "../main.h"
 
-#include <SFML/Window/Keyboard.hpp>
+#include <SDL2/SDL_keyboard.h>
 #include <sp2/graphics/gui/loader.h>
 #include <sp2/engine.h>
 
@@ -81,7 +81,7 @@ Editor::Editor(sp::P<sp::gui::Widget> parent, sp::string prefab_name)
 
 void Editor::onUpdate(float delta)
 {
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Delete) && selection)
+    if (SDL_GetKeyboardState(nullptr)[SDL_SCANCODE_DELETE] && selection)
     {
         LOG(Debug, "DEL");
         delete *selection;

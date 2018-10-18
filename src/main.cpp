@@ -17,7 +17,7 @@
 #include <sp2/collision/2d/circle.h>
 #include <sp2/random.h>
 
-#include <SFML/Window/Keyboard.hpp>
+#include <SDL2/SDL_keyboard.h>
 
 #include <fstream>
 #include "dynamicSectorLoader.h"
@@ -87,12 +87,12 @@ public:
             setPosition(position);
         }
 #ifdef DEBUG
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Z))
+        if (SDL_GetKeyboardState(nullptr)[SDL_SCANCODE_Z])
             setOrtographic(500.0);
         else
             setOrtographic(25.0);
 #endif
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+        if (SDL_GetKeyboardState(nullptr)[SDL_SCANCODE_ESCAPE])
             sp::Engine::getInstance()->shutdown();
     }
 };
