@@ -69,7 +69,7 @@ public:
 #ifdef DEBUG
                 render_data.color.a = 0.7;
 #endif        
-                queue.add(sp::Matrix4x4d::identity(), render_data);
+                queue.add(sp::Matrix4x4f::identity(), render_data);
             }
 
             glDisable(GL_STENCIL_TEST);

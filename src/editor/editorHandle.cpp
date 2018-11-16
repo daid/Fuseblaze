@@ -22,7 +22,7 @@ void EditorHandle::dragTo(sp::Vector2d position)
 {
     sp::P<Prototype> prototype = getParent();
 
-    sp::Vector2d point = prototype->getGlobalTransform().inverse() * position;
+    sp::Vector2d point = sp::Vector2d(prototype->getGlobalTransform().inverse() * sp::Vector2f(position));
     double step_size = 1.0;
     if (prototype->type == Prefab::Part::Type::PrefabConnection)
         step_size = 3.0;

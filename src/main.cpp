@@ -133,6 +133,7 @@ public:
 
 int main(int argc, char** argv)
 {
+    sp::P<sp::Engine> engine = new sp::Engine();
     //Create resource providers, so we can load things.
     new sp::io::DirectoryResourceProvider("resources");
     sp::texture_manager.setDefaultSmoothFiltering(false);
@@ -142,7 +143,6 @@ int main(int argc, char** argv)
     
     //Create a window to render on, and our engine.
     sp::P<sp::Window> window = new sp::Window(4.0/3.0);
-    sp::P<sp::Engine> engine = new sp::Engine();
     
     //Initialize the player keys, needs to be done before keybindings are loaded.
     PlayerKeys::init();
