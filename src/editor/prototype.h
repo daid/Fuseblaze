@@ -16,13 +16,13 @@ public:
     
     virtual void destroyHandles()
     {
-        for(Node* child : getChildren())
-            delete child;
+        for(sp::P<Node> child : getChildren())
+            child.destroy();
     }
     
     virtual sp::P<sp::Node> getHandle(sp::Vector2d position)
     {
-        for(Node* child : getChildren())
+        for(sp::P<Node> child : getChildren())
         {
             if ((child->getGlobalPosition2D() - position).length() < 0.5)
             {

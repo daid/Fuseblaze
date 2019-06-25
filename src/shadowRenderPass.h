@@ -31,7 +31,7 @@ public:
             });
             
             int n = 0;
-            for(sp::Node* light_source : light_sources)
+            for(sp::P<sp::Node> light_source : light_sources)
             {
                 sp::Vector2f pos = sp::Vector2f(light_source->getGlobalPosition2D());
                 
@@ -79,11 +79,11 @@ public:
         }
     }
     
-    void recursiveNodeRender(sp::RenderQueue& queue, sp::Node* node)
+    void recursiveNodeRender(sp::RenderQueue& queue, sp::P<sp::Node> node)
     {
         if (node->render_data.type == sp::RenderData::Type::None)
         {
-            if (mode == Mode::Shadow && dynamic_cast<ShadowCastNode*>(node))
+            if (mode == Mode::Shadow && sp::P<ShadowCastNode>(node))
             {
                 sp::RenderData render_data;
                 render_data.type = sp::RenderData::Type::Normal;
@@ -110,7 +110,7 @@ public:
             }
         }
 
-        for(sp::Node* child : node->getChildren())
+        for(sp::P<sp::Node> child : node->getChildren())
         {
             recursiveNodeRender(queue, child);
         }

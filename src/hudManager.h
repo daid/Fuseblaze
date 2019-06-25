@@ -13,7 +13,7 @@ public:
     virtual void onUpdate(float delta) override;
 
 private:
-    void update(Player* player, sp::P<sp::gui::Widget> hud);
+    void update(sp::P<Player> player, sp::P<sp::gui::Widget> hud);
 
     sp::P<sp::gui::Widget> huds[2];
 };

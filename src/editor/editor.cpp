@@ -3,7 +3,7 @@
 #include "prototype.h"
 #include "../main.h"
 
-#include <SDL2/SDL_keyboard.h>
+#include <SDL_keyboard.h>
 #include <sp2/graphics/gui/loader.h>
 #include <sp2/engine.h>
 

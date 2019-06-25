@@ -30,13 +30,13 @@ void HudManager::onUpdate(float delta)
 {
     huds[0]->hide();
     huds[1]->hide();
-    for(Player* player : Player::players)
+    for(sp::P<Player> player : Player::players)
     {
         update(player, huds[player->index]);
     }
 }
 
-void HudManager::update(Player* player, sp::P<sp::gui::Widget> hud)
+void HudManager::update(sp::P<Player> player, sp::P<sp::gui::Widget> hud)
 {
     hud->show();
 

@@ -181,7 +181,7 @@ void Prefab::updateFromPrototypes()
 {
     parts.clear();
     
-    for(sp::Node* node : scene->getRoot()->getChildren())
+    for(sp::P<sp::Node> node : scene->getRoot()->getChildren())
     {
         sp::P<Prototype> prototype = sp::P<sp::Node>(node);
         if (!prototype)

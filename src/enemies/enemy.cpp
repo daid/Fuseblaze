@@ -86,7 +86,7 @@ void Enemy::updateTargetPlayer()
     if (target_player)
         target_distance = (position - target_player->getGlobalPosition2D()).length();
     
-    for(Player* player : Player::players)
+    for(sp::P<Player> player : Player::players)
     {
         sp::Vector2d player_position = player->getGlobalPosition2D();
         double distance = (position - player_position).length();

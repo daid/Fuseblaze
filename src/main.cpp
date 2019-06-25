@@ -17,7 +17,7 @@
 #include <sp2/collision/2d/circle.h>
 #include <sp2/random.h>
 
-#include <SDL2/SDL_keyboard.h>
+#include <SDL_keyboard.h>
 
 #include <fstream>
 #include "dynamicSectorLoader.h"
@@ -76,7 +76,7 @@ public:
     {
         sp::Vector2d position;
         int player_count = 0;
-        for(Player* p : Player::players)
+        for(sp::P<Player> p : Player::players)
         {
             position += p->getGlobalPosition2D();
             player_count++;
