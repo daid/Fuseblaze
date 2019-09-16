@@ -154,7 +154,7 @@ int main(int argc, char** argv)
     
     sp::P<ShadowRenderPass> shadow_pass;
     {
-        gui_scene = new sp::gui::Scene(sp::Vector2d(1280, 800), sp::gui::Scene::Direction::Horizontal);
+        gui_scene = new sp::gui::Scene(sp::Vector2d(1280, 800));
 
         camera = new CameraController(scene->getRoot());
 
