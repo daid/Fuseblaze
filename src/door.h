@@ -18,7 +18,7 @@ public:
         render_data.order -= 1; //Render doors below walls.
     }
     
-    virtual void onUpdate(float delta)
+    virtual void onUpdate(float delta) override
     {
         if (request_state != actual_state)
         {

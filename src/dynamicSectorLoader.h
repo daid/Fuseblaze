@@ -19,7 +19,7 @@ class DynamicSectorLoader : public sp::Node
 public:
     DynamicSectorLoader();
     
-    virtual void onUpdate(float delta);
+    virtual void onUpdate(float delta) override;
 
 private:
     static constexpr float load_distance = 30.0;
