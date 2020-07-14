@@ -64,16 +64,16 @@ bool SectorLoader::loadSector(int x, int y, int level, sp::P<sp::Node> root)
             std::vector<sp::Vector2f> path;
             for(unsigned int index=0; index<point_count; index++)
             {
-                int32_t x, y;
-                fread(&x, 1, sizeof(x), f);
-                x = htonl(x);
-                fread(&y, 1, sizeof(y), f);
-                y = htonl(y);
+                int32_t px, py;
+                fread(&px, 1, sizeof(px), f);
+                px = htonl(px);
+                fread(&py, 1, sizeof(py), f);
+                py = htonl(py);
                 
-                x -= sector_offset_x * sector_size;
-                y -= sector_offset_y * sector_size;
+                px -= sector_offset_x * sector_size;
+                py -= sector_offset_y * sector_size;
                 
-                sp::Vector2f v(double(y) / sector_import_scale, double(-x) / sector_import_scale);
+                sp::Vector2f v(double(py) / sector_import_scale, double(-px) / sector_import_scale);
                 if (path.size() == 0 || (path.back() - v).length() > 0.010f)
                     path.emplace_back(v);
             }
