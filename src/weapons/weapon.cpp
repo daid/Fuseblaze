@@ -48,9 +48,9 @@ void Weapon::onUpdate(float delta)
                     if (std::abs(sp::angleDifference(enemy_angle, 0.0)) < 55)
                     {
                         bool visible = true;
-                        ::scene->queryCollisionAny(sp::Ray2d(getGlobalPosition2D(), enemy->getGlobalPosition2D()), [&visible, &target](sp::P<sp::Node> object, sp::Vector2d hit_location, sp::Vector2d hit_normal)
+                        ::scene->queryCollisionAny(sp::Ray2d(getGlobalPosition2D(), enemy->getGlobalPosition2D()), [&visible, &target](sp::P<sp::Node> object2, sp::Vector2d hit_location, sp::Vector2d hit_normal)
                         {
-                            if (sp::P<Wall>(object) || (object->isSolid() && !sp::P<Enemy>(object)))
+                            if (sp::P<Wall>(object2) || (object2->isSolid() && !sp::P<Enemy>(object2)))
                             {
                                 visible = false;
                                 return false;
