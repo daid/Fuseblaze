@@ -7,7 +7,7 @@
 
 #include "editor/prototype.h"
 
-#include <json11/json11.hpp>
+#include <nlohmann/json.hpp>
 #include <sp2/io/resourceProvider.h>
 #include <sp2/script/environment.h>
 #include <fstream>
@@ -22,13 +22,12 @@ void Prefab::load(sp::string filename)
         LOG(Error, "Failed to find prefab", filename);
     sp::string data = stream->readAll();
     
-    std::string err;
-    json11::Json json = json11::Json::parse(data, err);
+    auto json = nlohmann::json::parse(data);
     
-    for(const json11::Json& entry : json.array_items())
+    for(const auto& entry : json)
     {
         Part part;
-        sp::string type_string = entry["type"].string_value();
+        sp::string type_string = entry["type"];
         if (type_string == "Wall")
             part.type = Part::Type::Wall;
         else if (type_string == "Floor")
@@ -46,15 +45,15 @@ void Prefab::load(sp::string filename)
             LOG(Warning, "Unknown part type", type_string);
             part.type = Part::Type::Floor;
         }
-        part.position.x = entry["position_x"].number_value();
-        part.position.y = entry["position_y"].number_value();
-        part.rotation = entry["rotation"].number_value();
-        part.size.x = entry["size_x"].number_value();
-        part.size.y = entry["size_y"].number_value();
-        part.color.hue = entry["color_h"].number_value();
-        part.color.saturation = entry["color_s"].number_value();
-        part.color.value = entry["color_v"].number_value();
-        part.id = entry["id"].string_value();
+        part.position.x = entry["position_x"];
+        part.position.y = entry["position_y"];
+        part.rotation = entry["rotation"];
+        part.size.x = entry["size_x"];
+        part.size.y = entry["size_y"];
+        part.color.hue = entry["color_h"];
+        part.color.saturation = entry["color_s"];
+        part.color.value = entry["color_v"];
+        part.id = entry["id"];
 
         parts.push_back(part);
     }
@@ -64,10 +63,10 @@ void Prefab::load(sp::string filename)
 
 void Prefab::save(sp::string filename)
 {
-    json11::Json::array prefab_data;
+    nlohmann::json prefab_data;
     for(Part& part : parts)
     {
-        json11::Json::object data;
+        nlohmann::json data;
         switch(part.type)
         {
         case Prefab::Part::Type::Wall:
@@ -102,10 +101,9 @@ void Prefab::save(sp::string filename)
 
         prefab_data.push_back(data);
     }
-    json11::Json json = prefab_data;
-    
+
     std::ofstream file("resources/" + filename + ".prefab");
-    file << json.dump();
+    file << prefab_data.dump();
 }
 
 std::map<sp::string, sp::P<sp::Node>> Prefab::spawn(sp::Vector2d position, double rotation)

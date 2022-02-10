@@ -15,7 +15,7 @@ public:
     virtual void onCollision(sp::CollisionInfo& info) override;
     virtual void onFixedUpdate() override;
     
-    virtual void onRegisterScriptBindings(sp::ScriptBindingClass& script_binding_class) override;
+    virtual void onRegisterScriptBindings(sp::script::BindingClass& script_binding_class) override;
 private:
     int touch_count;
 };

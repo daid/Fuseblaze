@@ -39,7 +39,7 @@ void Trigger::onFixedUpdate()
     }
 }
 
-void Trigger::onRegisterScriptBindings(sp::ScriptBindingClass& script_binding_class)
+void Trigger::onRegisterScriptBindings(sp::script::BindingClass& script_binding_class)
 {
     script_binding_class.bind("onTriggerEnter", onTriggerEnter);
     script_binding_class.bind("onTriggerExit", onTriggerExit);
