@@ -223,18 +223,18 @@ int main(int argc, char** argv)
         {
             int x = (n % 16) * 3;
             int y = (n / 16) * 3;
-            tm->setTile(x + 0, y + 2, sp::random(0, 100) < 20 ? 1 : 0);
-            tm->setTile(x + 1, y + 2, sp::random(0, 100) < 20 ? 1 : 0);
-            tm->setTile(x + 2, y + 2, sp::random(0, 100) < 20 ? 1 : 0);
+            tm->setTile({x + 0, y + 2}, sp::random(0, 100) < 20 ? 1 : 0);
+            tm->setTile({x + 1, y + 2}, sp::random(0, 100) < 20 ? 1 : 0);
+            tm->setTile({x + 2, y + 2}, sp::random(0, 100) < 20 ? 1 : 0);
 
-            tm->setTile(x + 0, y + 1, sp::random(0, 100) < 20 ? 1 : 0);
-            tm->setTile(x + 2, y + 1, sp::random(0, 100) < 20 ? 1 : 0);
+            tm->setTile({x + 0, y + 1}, sp::random(0, 100) < 20 ? 1 : 0);
+            tm->setTile({x + 2, y + 1}, sp::random(0, 100) < 20 ? 1 : 0);
 
-            tm->setTile(x + 0, y + 0, sp::random(0, 100) < 20 ? 1 : 0);
-            tm->setTile(x + 1, y + 0, sp::random(0, 100) < 20 ? 1 : 0);
-            tm->setTile(x + 2, y + 0, sp::random(0, 100) < 20 ? 1 : 0);
+            tm->setTile({x + 0, y + 0}, sp::random(0, 100) < 20 ? 1 : 0);
+            tm->setTile({x + 1, y + 0}, sp::random(0, 100) < 20 ? 1 : 0);
+            tm->setTile({x + 2, y + 0}, sp::random(0, 100) < 20 ? 1 : 0);
             
-            tm->setTile(x + 1, y + 1, sp::random(0, 100) < 50 ? 1 : 0);
+            tm->setTile({x + 1, y + 1}, sp::random(0, 100) < 50 ? 1 : 0);
         }
         
         for(int x=0; x<16*3; x++)
@@ -242,20 +242,20 @@ int main(int argc, char** argv)
             for(int y=0; y<16*3; y++)
             {
                 int n = 0;
-                if (tm->getTileIndex(x, y) < 1) continue;
+                if (tm->getTileIndex({x, y}) < 1) continue;
                 
-                if (tm->getTileIndex(x - 1, y - 1) > 0) n |= 1 << 5;
-                if (tm->getTileIndex(x + 0, y - 1) > 0) n |= 1 << 6;
-                if (tm->getTileIndex(x + 1, y - 1) > 0) n |= 1 << 7;
+                if (tm->getTileIndex({x - 1, y - 1}) > 0) n |= 1 << 5;
+                if (tm->getTileIndex({x + 0, y - 1}) > 0) n |= 1 << 6;
+                if (tm->getTileIndex({x + 1, y - 1}) > 0) n |= 1 << 7;
 
-                if (tm->getTileIndex(x - 1, y + 0) > 0) n |= 1 << 3;
-                if (tm->getTileIndex(x + 1, y + 0) > 0) n |= 1 << 4;
+                if (tm->getTileIndex({x - 1, y + 0}) > 0) n |= 1 << 3;
+                if (tm->getTileIndex({x + 1, y + 0}) > 0) n |= 1 << 4;
 
-                if (tm->getTileIndex(x - 1, y + 1) > 0) n |= 1 << 0;
-                if (tm->getTileIndex(x + 0, y + 1) > 0) n |= 1 << 1;
-                if (tm->getTileIndex(x + 1, y + 1) > 0) n |= 1 << 2;
+                if (tm->getTileIndex({x - 1, y + 1}) > 0) n |= 1 << 0;
+                if (tm->getTileIndex({x + 0, y + 1}) > 0) n |= 1 << 1;
+                if (tm->getTileIndex({x + 1, y + 1}) > 0) n |= 1 << 2;
                 
-                tm->setTile(x, y, tib.index[n].x + (tib.index[n].y + 4) * 34, sp::Tilemap::Collision::Solid);
+                tm->setTile({x, y}, tib.index[n].x + (tib.index[n].y + 4) * 34, sp::Tilemap::Collision::Solid);
             }
         }
     }
