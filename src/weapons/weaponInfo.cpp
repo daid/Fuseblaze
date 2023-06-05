@@ -8,7 +8,7 @@ std::unordered_map<sp::string, WeaponInfo> weapons;
 
 void WeaponInfo::init()
 {
-    sp::KeyValueTreePtr tree = sp::io::KeyValueTreeLoader::load("weapons/definitions.txt");
+    sp::KeyValueTreePtr tree = sp::io::KeyValueTreeLoader::loadResource("weapons/definitions.txt");
     for(auto data : tree->getFlattenNodesByIds())
     {
         WeaponInfo info;
